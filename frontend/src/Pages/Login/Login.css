@@ -1,0 +1,127 @@
+.login-page {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    padding: 40px 0;
+    display: flex;
+    align-items: center;
+}
+
+.login-form-container {
+    max-width: 450px;
+    margin: 0 auto;
+    border: none;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.login-form-container h2 {
+    color: #333;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+}
+
+.form-label {
+    color: #333;
+    font-weight: 600;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.form-control-lg {
+    padding: 15px 20px;
+    font-size: 16px;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+    box-shadow: none;
+}
+
+.form-control-lg:focus {
+    background-color: #fff !important;
+    border-color: #ff6b35;
+    box-shadow: 0 0 0 0.2rem rgba(255, 107, 53, 0.25);
+}
+
+.form-control-lg::placeholder {
+    color: #999;
+    font-size: 14px;
+}
+
+/* Checkbox Styling */
+.form-check-input {
+    margin-top: 0.25em;
+}
+
+.form-check-input:checked {
+    background-color: #ff6b35;
+    border-color: #ff6b35;
+}
+
+.form-check-input:focus {
+    border-color: #ff6b35;
+    box-shadow: 0 0 0 0.25rem rgba(255, 107, 53, 0.25);
+}
+
+.form-check-label {
+    font-size: 14px;
+}
+
+/* Button Styling */
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+    transition: all 0.3s ease;
+}
+
+/* Link Styling */
+a.text-muted:hover {
+    color: #ff6b35 !important;
+    text-decoration: underline !important;
+}
+
+a[style*="color: #ff6b35"]:hover {
+    text-decoration: underline !important;
+    opacity: 0.8;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .login-page {
+        padding: 20px 0;
+    }
+
+    .login-form-container {
+        margin: 15px;
+        padding: 2rem !important;
+    }
+
+    .login-form-container h2 {
+        font-size: 1.5rem;
+    }
+
+    .form-control-lg {
+        padding: 12px 15px;
+        font-size: 14px;
+    }
+}
+
+/* Animation */
+.login-form-container {
+    animation: slideUp 0.5s ease-in-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Focus states */
+.form-control-lg:focus+.form-label,
+.form-control-lg:not(:placeholder-shown)+.form-label {
+    color: #ff6b35;
+}
