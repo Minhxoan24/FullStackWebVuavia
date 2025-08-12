@@ -1,0 +1,46 @@
+.navbar {
+  background: linear-gradient(to right, #f39c12, #f39c12);
+  /* Cam đồng nhất */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 12px 20px;
+  gap: 24px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  border-bottom: 2px solid #e67e22;
+}
+
+.navbar-link {
+  position: relative;
+  color: #fff;
+  font-weight: 600;
+  text-transform: uppercase;
+  text-decoration: none;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  padding: 4px 8px;
+  transition: color 0.3s ease;
+}
+
+/* Hover đẹp */
+.navbar-link:hover {
+  color: #f1f1f1;
+}
+
+/* Đường gạch phân cách mờ */
+.navbar-link:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  right: -12px;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 60%;
+  width: 1px;
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Link active được làm sáng */
+.navbar-link.active {
+  color: #ffffcc;
+  text-shadow: 0 0 4px #fff;
+}

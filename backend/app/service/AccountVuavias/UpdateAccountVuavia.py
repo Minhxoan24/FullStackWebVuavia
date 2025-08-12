@@ -1,0 +1,22 @@
+from fastapi import HTTPException 
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select, delete
+from app.models.AccountVuavia import AccountVuavia
+from app.schemas.AccountVuaviaSchema.DeleteVuavia import DeleteVuaviaSchema
+from app.schemas.Message.Message import MessageSchema
+async def DeleteAccountVuaviaService(account_delete: DeleteVuaviaSchema, db: AsyncSession):
+    try:
+        # Kiểm tra xem tài khoản có tồn tại không
+        result = await db.execute(select(AccountVuavia).where(AccountVuavia.id == account_delete.id))
+        account = result.scalar_one_or_none()
+        if not account:
+            raise HTTPException(status_code=404, detail="Account not found")
+        # Xóa tài khoản
+        await db.execute(delete(AccountVuavia).where(AccountVuavia.id == account_delete.id))
+        await db.commit()
+    except HTTPException as httpex:
+        await db.rollback()
+        raise httpex  
+    except Exception as e:
+        await db.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
