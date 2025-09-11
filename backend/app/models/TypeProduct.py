@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, String, ForeignKey 
 from sqlalchemy.orm import relationship
+from sqlalchemy.dialects.postgresql import JSONB
 
 from .base import Base
 
@@ -9,13 +10,14 @@ class TypeProduct(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(200), nullable=False)
     price = Column(Integer, nullable=False)
-    description = Column(String(500), nullable=True)
     image = Column(String(500), nullable=True)
 
-    # Foreign Key
-   
-    category_id = Column(Integer, ForeignKey("categories.id"), nullable=False , ondelete="CASCADE")
+    description = Column(JSONB, nullable=True)
     
+    # Foreign Key
+
+    category_id = Column(Integer, ForeignKey("categories.id", ondelete="CASCADE"), nullable=False)
+
     # Relationships
     category = relationship("Category", back_populates="type_products")
     account_vuavias = relationship("AccountVuavia", back_populates="type_product")

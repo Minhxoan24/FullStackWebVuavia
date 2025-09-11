@@ -1,6 +1,7 @@
 from pydantic import BaseModel
-class MessegeSchema(BaseModel):
+    
+class MessageSchema(BaseModel):
     message: str
 
     class Config:
-        from_attributes = True
+        from_attributes = True 

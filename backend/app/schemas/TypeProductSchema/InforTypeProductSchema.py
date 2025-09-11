@@ -1,4 +1,6 @@
 from pydantic import BaseModel
+from typing import Optional 
+
 
 class InforTypeProductSchema(BaseModel):
     id: int
@@ -7,6 +9,7 @@ class InforTypeProductSchema(BaseModel):
     price: float
     image: str
     category_id: int
-    category_name: str
+    quantity : Optional[int] = None
+
     class Config:
         from_attributes = True

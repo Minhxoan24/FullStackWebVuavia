@@ -1,0 +1,65 @@
+#  Licensed under the Apache License, Version 2.0 (the "License"); you may
+#  not use this file except in compliance with the License. You may obtain
+#  a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+#  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+#  License for the specific language governing permissions and limitations
+#  under the License.
+
+"""Output formatters values only"""
+
+import argparse
+import collections.abc
+import typing as ty
+
+from cliff import columns
+from cliff.formatters import base
+
+
+class ValueFormatter(base.ListFormatter, base.SingleFormatter):
+    def add_argument_group(self, parser: argparse.ArgumentParser) -> None:
+        pass
+
+    def emit_list(
+        self,
+        column_names: collections.abc.Sequence[str],
+        data: collections.abc.Iterable[collections.abc.Sequence[ty.Any]],
+        stdout: ty.TextIO,
+        parsed_args: argparse.Namespace,
+    ) -> None:
+        for row in data:
+            stdout.write(
+                ' '.join(
+                    str(
+                        c.machine_readable()
+                        if isinstance(c, columns.FormattableColumn)
+                        else c
+                    )
+                    for c in row
+                )
+                + '\n'
+            )
+        return
+
+    def emit_one(
+        self,
+        column_names: collections.abc.Sequence[str],
+        data: collections.abc.Sequence[ty.Any],
+        stdout: ty.TextIO,
+        parsed_args: argparse.Namespace,
+    ) -> None:
+        for value in data:
+            stdout.write(
+                '{}\n'.format(
+                    str(
+                        value.machine_readable()
+                        if isinstance(value, columns.FormattableColumn)
+                        else value
+                    )
+                )
+            )
+        return

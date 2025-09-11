@@ -5,8 +5,8 @@ from .base import Base
 from .UserRole import user_roles
 
 class RoleEnum(PyEnum):
-    USER = "User"
-    ADMIN = "Admin"
+    USER = "USER"
+    ADMIN = "ADMIN"
 
 class Role(Base):
     __tablename__ = "roles"

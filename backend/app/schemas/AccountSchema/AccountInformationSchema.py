@@ -9,6 +9,7 @@ class InformationAccountSchema(BaseModel):
     email: str
     avatar: Optional[str] = None
     phone: str
+    balance : int
 
     class Config:
         from_attributes = True

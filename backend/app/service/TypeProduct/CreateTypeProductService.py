@@ -4,7 +4,7 @@ from fastapi import HTTPException
 from app.models.TypeProduct import TypeProduct
 from app.schemas.TypeProductSchema.CreateTypeProductSchema import CreateTypeProductSchema 
 from app.schemas.TypeProductSchema.InforTypeProductSchema import InforTypeProductSchema
-from app.schemas.TypeProductSchema.MessengeSchema import MessengeSchema
+from app.schemas.Message.Message import MessageSchema
 async def CreateTypeProductService(type_product_data: CreateTypeProductSchema, db: AsyncSession):
     try:
         query = select(TypeProduct).where(TypeProduct.name == type_product_data.name)
@@ -23,7 +23,7 @@ async def CreateTypeProductService(type_product_data: CreateTypeProductSchema, d
         db.add(new_type_product)
         await db.commit()
         await db.refresh(new_type_product)
-        return MessengeSchema(message="Type product created successfully")
+        return MessageSchema(message="Type product created successfully")
     except HTTPException as httpex:
         raise httpex
     except Exception as e:

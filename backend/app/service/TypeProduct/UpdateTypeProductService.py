@@ -3,7 +3,7 @@ from sqlalchemy.sql import select, delete
 from fastapi import HTTPException
 from app.models.TypeProduct import TypeProduct
 from app.schemas.TypeProductSchema.UpdateTypeProductSchema import UpdateTypeProductSchema
-from app.schemas.TypeProductSchema.MessengeSchema import MessengeSchema
+from app.schemas.Message.Message import MessageSchema
 async def UpdateTypeProductService(type_product_data: UpdateTypeProductSchema, db: AsyncSession):
     try:
         query = select(TypeProduct).where(TypeProduct.id == type_product_data.id)
@@ -19,7 +19,7 @@ async def UpdateTypeProductService(type_product_data: UpdateTypeProductSchema, d
         type_product.category_id = type_product_data.category_id
         db.add(type_product)
         await db.commit()
-        return MessengeSchema(message="Type product updated successfully")
+        return MessageSchema(message="Type product updated successfully")
     except HTTPException as httpex:
         raise httpex
     except Exception as e:

@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 # Import tất cả models TRƯỚC KHI tạo FastAPI app để đăng ký mappers
 from app.models import *
 
-from app.endpoints.v1 import Account, Category
+from app.endpoints.v1 import Account, Category ,Order  ,TypeProduct ,Voucher , AccountVuavia , TransactionHistory
 
 app = FastAPI(title="Vuavia API", version="1.0.0")
 app.add_middleware(
@@ -16,6 +16,12 @@ app.add_middleware(
 )
 app.include_router(Account.router)
 app.include_router(Category.router)
+app.include_router(TypeProduct.router)
+app.include_router(AccountVuavia.router)
+
+app.include_router(Order.router)
+app.include_router(Voucher.router)
+app.include_router(TransactionHistory.router)
 # .\venv\Scripts\activate
 # uvicorn app.main:app --reload
 # uvicorn app.main:app --reload --host 0.0.0.0 --port 8000 

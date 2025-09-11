@@ -63,8 +63,9 @@ class CreateUserRegisterSchema(BaseModel):
         if len(value.strip()) > 100:
             raise ValueError("Password must be at most 100 characters long")
         return value.strip().replace(" ", "")
-class MessegeRegisterSchema(BaseModel):
-    message: str
+class ResponseRegisterSchema(BaseModel):
+    access_token: str
+    refresh_token: str
+    token_type: str
     class Config:
         from_attributes = True
-    

@@ -1,5 +1,5 @@
-from pydantic import Base
+from pydantic import BaseModel
 
-class DeleteCategorySchema(Base):
+class DeleteCategorySchema(BaseModel):
     id: int
 

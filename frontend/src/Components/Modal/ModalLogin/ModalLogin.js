@@ -1,8 +1,19 @@
-import React from 'react';
+import React, { useState, useContext } from "react";
+import { AuthContext } from "../../../Context/AuthContext"; // đường dẫn tuỳ vị trí file
 import './ModalLogin.css';
 
 import { useNavigate } from 'react-router-dom';
 const ModalLogin = ({ show, handleClose }) => {
+    const { login } = useContext(AuthContext);
+    const [formModalLogin, setFormModalLogin] = useState({
+        accountname: "",
+        password: "",
+    });
+
+
+
+
+
     const navigate = useNavigate();
     // if show = True thì !show = false mà false thì bỏ qua . nếu show = false thì !show = true . điều kiện đúng trả về null 
     if (!show) return null;
@@ -16,6 +27,23 @@ const ModalLogin = ({ show, handleClose }) => {
     const handleBackdropClick = (e) => {
         if (e.target === e.currentTarget) {
             handleClose();
+        }
+    };
+    const handleSubmitLogin = async (e) => {
+        e.preventDefault(); // Ngăn chặn hành vi mặc định của form (tải lại trang)
+        // Gọi API đăng nhập ở đây
+        if (!formModalLogin.accountname || !formModalLogin.password) {
+            alert("Vui lòng nhập đầy đủ thông tin");
+            return;
+        }
+        try {
+            const data = await login(formModalLogin);
+            alert("Login successful!");
+            console.log("Login successful:", data);
+            // Redirect to homepage or dashboard
+        } catch (error) {
+            console.error("Login failed:", error);
+            alert("Login failed:" + (error.response?.data?.message || error.message));
         }
     };
 
@@ -52,17 +80,22 @@ const ModalLogin = ({ show, handleClose }) => {
                                     <div className="login-form-container">
                                         <h3 className="fw-bold mb-4 text-dark">ĐĂNG NHẬP</h3>
 
-                                        <form>
+                                        <form onSubmit={handleSubmitLogin}>
                                             {/* Username/Email Input */}
                                             <div className="mb-3">
                                                 <label className="form-label fw-semibold text-dark mb-2">
-                                                    Tên tài khoản hoặc địa chỉ email *
+                                                    Tên tài khoản *
                                                 </label>
                                                 <input
                                                     type="text"
                                                     className="form-control form-control-lg bg-light border-0 rounded-3 px-3"
-                                                    placeholder="Trần Nhật Minh"
+                                                    placeholder="Nhập tên tài khoản !"
+
                                                     style={{ backgroundColor: '#f8f9fa' }}
+                                                    name="accountname"
+                                                    autoComplete="accountname"
+                                                    value={formModalLogin.accountname}
+                                                    onChange={(e) => setFormModalLogin({ ...formModalLogin, accountname: e.target.value })}
                                                 />
                                             </div>
 
@@ -76,6 +109,10 @@ const ModalLogin = ({ show, handleClose }) => {
                                                     className="form-control form-control-lg bg-light border-0 rounded-3 px-3"
                                                     placeholder="••••••••"
                                                     style={{ backgroundColor: '#f8f9fa' }}
+                                                    name="password"
+                                                    autoComplete="current-password"
+                                                    value={formModalLogin.password}
+                                                    onChange={(e) => setFormModalLogin({ ...formModalLogin, password: e.target.value })}
                                                 />
                                             </div>
 
@@ -95,10 +132,12 @@ const ModalLogin = ({ show, handleClose }) => {
                                             <button
                                                 type="submit"
                                                 className="btn btn-warning btn-lg w-100 fw-bold rounded-3 mb-3 text-white"
+
                                                 style={{
                                                     backgroundColor: '#ff6b35',
                                                     borderColor: '#ff6b35',
                                                     padding: '12px'
+
                                                 }}
                                             >
                                                 ĐĂNG NHẬP
@@ -106,7 +145,7 @@ const ModalLogin = ({ show, handleClose }) => {
 
                                             {/* Forgot Password Link */}
                                             <div className="text-center mb-4">
-                                                <a href="#" className="text-decoration-none text-muted">
+                                                <a href="/forgot-password" className="text-decoration-none text-muted">
                                                     Quên mật khẩu?
                                                 </a>
                                             </div>
