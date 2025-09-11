@@ -34,6 +34,12 @@
     box-shadow: none;
 }
 
+/* Thêm để Chrome autofill đẹp hơn */
+input:-webkit-autofill {
+    box-shadow: 0 0 0 30px #f8f9fa inset !important;
+    -webkit-text-fill-color: #333 !important;
+}
+
 .form-control-lg:focus {
     background-color: #fff !important;
     border-color: #ff6b35;
@@ -118,10 +124,4 @@ a[style*="color: #ff6b35"]:hover {
         opacity: 1;
         transform: translateY(0);
     }
-}
-
-/* Focus states */
-.form-control-lg:focus+.form-label,
-.form-control-lg:not(:placeholder-shown)+.form-label {
-    color: #ff6b35;
 }

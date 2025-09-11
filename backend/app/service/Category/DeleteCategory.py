@@ -1,5 +1,5 @@
 from app.schemas.CategorySchema.DeleteCategorySchema import DeleteCategorySchema
-from app.schemas.CategorySchema.MessengeSchema import MessageSchema
+from app.schemas.Message.Message import MessageSchema
 from fastapi import Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, delete

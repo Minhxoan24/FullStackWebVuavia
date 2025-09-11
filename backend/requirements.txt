@@ -3,6 +3,7 @@ uvicorn[standard]
 python-dotenv
 sqlalchemy
 psycopg2-binary
+asyncpg
 alembic
 pydantic[email]
 python-jose[cryptography]
@@ -16,3 +17,5 @@ fastapi-utils
 loguru
 pytest
 httpx
+redis
+

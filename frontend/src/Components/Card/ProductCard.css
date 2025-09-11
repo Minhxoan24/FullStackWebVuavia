@@ -1,0 +1,41 @@
+/* Card tổng thể */
+.product-card {
+    width: 250px;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Ảnh sản phẩm */
+.product-image {
+    object-fit: contain;
+    height: fit-content;
+    padding: 15px;
+    background: #f9f9f9;
+    border-bottom: 1px solid #eee;
+}
+
+/* Hover mô tả: ẩn/mở bằng height */
+.card-hover {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.3s ease;
+    font-size: 0.85rem;
+    color: #555;
+}
+
+.product-card:hover .card-hover {
+    max-width: fit-content;
+    max-height: 200px;
+    /* tùy chỉnh cho vừa nội dung */
+    padding: 10px;
+    margin-bottom: 10px;
+    background: #fdfdfd;
+    border-radius: 8px;
+    border: 1px solid #eee;
+}

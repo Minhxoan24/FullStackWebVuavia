@@ -10,11 +10,11 @@ class CreateCategorySchema(BaseModel):
             raise ValueError("Name cannot be empty")
         if len(value.strip()) < 3:
             raise ValueError("Name must be at least 3 characters long")
-        if len(value.strip()) > 200 : 
+        if len(value.strip()) > 20000 : 
             raise ValueError("Name must be at most 200 characters long")
         return value.strip()
     @field_validator("description")
     def validate_description(cls, value):
-        if value and len(value.strip()) > 500:
+        if value and len(value.strip()) > 500000:
             raise ValueError("Description must be at most 500 characters long")
         return value.strip() if value else value

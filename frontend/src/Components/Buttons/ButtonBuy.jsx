@@ -1,6 +1,12 @@
-const ButtonBuy = () => {
+import React from "react";
+import './ButtonBuy.css';
+
+const Button = ({ text, onClick }) => {
     return (
-        <button type="button" className="button btn-outline-warning" onClick={() => alert('Button clicked!')}> Mua Tài Khoản </button>
+        <button className="custom-button" onClick={onClick}>
+            {text}
+        </button>
     );
-}
-export default ButtonBuy;
+};
+
+export default Button;

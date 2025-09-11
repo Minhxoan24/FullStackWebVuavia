@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from app.models.Category import Category
 from app.schemas.CategorySchema.CreateCategorySchema import CreateCategorySchema
-from app.schemas.CategorySchema.MessengeSchema import MessegeSchema
+from app.schemas.Message.Message import MessageSchema
 from app.schemas.CategorySchema.InforCategorySchema import InforCategorySchema
 
 async def CreatecategoryServices( category_new : CreateCategorySchema ,  db : AsyncSession):

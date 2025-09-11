@@ -1,0 +1,2 @@
+[console_scripts]
+glance = glanceclient.shell:main
