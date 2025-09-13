@@ -1,11 +1,9 @@
 from  pydantic import BaseModel , field_validator
 from typing import Optional
 
-class UpdateCategorySchema(BaseModel):
-
-    id: int
-    name: str
-    description: str 
+class UpdateCategorySchema(BaseModel): 
+    name : Optional[str] = None
+    description: Optional[str]= None 
     @field_validator("name")
     def validate_name(cls, value):
         if not value or not value.strip():

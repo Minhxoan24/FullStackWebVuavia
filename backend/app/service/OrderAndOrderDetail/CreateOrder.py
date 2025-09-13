@@ -16,93 +16,92 @@ from app.models.Users import User
 from app.service.RedisService.RedisService import redis_service
 from app.models.TransactionHistory import TransactionType
 from app.models.TransactionHistory import TransactionHistory
+
 async def CreateOrderService(
     new_order: CreateOrderSchema,
     db: AsyncSession,
     user_id: int,
 ) -> MessageSchema:
+    """
+    Service tạo order trực tiếp - KHÔNG qua giỏ hàng
+    Flow: User chọn sản phẩm + số lượng → Mua ngay
+    """
     try:
-        # Lấy user
+        # 1. Lấy user
         query_user = await db.execute(select(User).where(User.id == user_id))
         user = query_user.scalar_one_or_none()
         if not user:
             raise HTTPException(status_code=404, detail="User not found")
 
-        # Kiểm tra type_product
+        # 2. Kiểm tra type_product và lấy giá
         query_product = await db.execute(select(TypeProduct).where(TypeProduct.id == new_order.type_product_id))
         type_product = query_product.scalar_one_or_none()
         if not type_product:
             raise HTTPException(status_code=404, detail="Type product not found")
 
-        # Kiểm tra giá
-        if new_order.price != type_product.price * new_order.quantity:
-            raise HTTPException(status_code=400, detail="Invalid price")
+        # 3. Tính giá gốc (từ DB, không từ client)
+        original_price = type_product.price * new_order.quantity
 
-        # Kiểm tra số lượng tài khoản
+        # 4. Kiểm tra số lượng tài khoản available
         count_account = await CountAccountVuaviaService(new_order.type_product_id, db)
         if new_order.quantity > count_account:
-            raise HTTPException(status_code=400, detail="Not enough accounts in stock")
+            raise HTTPException(status_code=400, detail=f"Not enough accounts. Available: {count_account}")
 
-        # Kiểm tra voucher (nếu có)
-        discount_amount = new_order.discount_amount or 0
+        # 5. Xử lý voucher (nếu có)
+        discount_amount = 0
+        voucher = None
         if new_order.voucher_id:
-            # Lấy từ Redis
+            # Kiểm tra voucher từ cache Redis
             cached_voucher = await redis_service.get_voucher_cache(user_id)
-            if not cached_voucher:
-                raise HTTPException(status_code=400, detail="No voucher applied")
+            if not cached_voucher or cached_voucher.get("voucher_id") != new_order.voucher_id:
+                raise HTTPException(status_code=400, detail="Voucher not applied or expired")
 
-            if cached_voucher["voucher_id"] != new_order.voucher_id or cached_voucher["discount_amount"] != new_order.discount_amount:
-                raise HTTPException(status_code=400, detail="Voucher mismatch")
-
-            # Kiểm tra lại voucher
+            # Validate voucher từ DB
             query_voucher = await db.execute(select(Voucher).where(Voucher.id == new_order.voucher_id))
             voucher = query_voucher.scalar_one_or_none()
             if not voucher:
                 raise HTTPException(status_code=400, detail="Voucher not found")
 
+            # Validate voucher rules
             if (voucher.status != "ACTIVE" or not voucher.is_active or
                 voucher.expiry_date <= datetime.now(timezone.utc) or
-                voucher.min_order_amount > new_order.price):
+                voucher.min_order_amount > original_price):
                 raise HTTPException(status_code=400, detail="Voucher not valid")
 
-            # Kiểm tra giới hạn sử dụng
-            usage_query = select(VoucherUsage).where(
-                VoucherUsage.voucher_id == voucher.id,
-                VoucherUsage.user_id == user_id,
-                VoucherUsage.is_valid == True
-            )
-            usage_count = len((await db.execute(usage_query)).scalars().all())
-            if voucher.usage_limit_per_user and usage_count >= voucher.usage_limit_per_user:
-                raise HTTPException(status_code=400, detail="User exceeded voucher usage limit")
-            if voucher.usage_limit_total and voucher.used_count >= voucher.usage_limit_total:
-                raise HTTPException(status_code=400, detail="Voucher usage limit reached")
+            # Tính discount
+            if voucher.discount_type == "fixed":
+                discount_amount = voucher.discount_value
+            else:  # percentage
+                discount_amount = min(
+                    original_price * voucher.discount_value / 100,
+                    voucher.max_discount or float('inf')
+                )
+            
+            # Đảm bảo discount không vượt quá giá gốc
+            discount_amount = min(discount_amount, original_price)
 
-            # Tính lại discount_amount
-            calculated_discount = voucher.discount_value if voucher.discount_type == "fixed" else \
-                                 min(new_order.price * voucher.discount_value / 100, voucher.max_discount or float('inf'))
-            if calculated_discount != new_order.discount_amount:
-                raise HTTPException(status_code=400, detail="Invalid discount amount")
-
-        # Kiểm tra số dư
-        total_amount = new_order.price - discount_amount
+        # 6. Tính tổng tiền phải trả
+        total_amount = original_price - discount_amount
+        
+        # 7. Kiểm tra số dư
         if user.balance < total_amount:
-            raise HTTPException(status_code=400, detail="Insufficient balance")
+            raise HTTPException(status_code=400, detail=f"Insufficient balance. Required: {total_amount}, Available: {user.balance}")
 
-        # Lấy danh sách tài khoản
+        # 8. Lấy accounts (với pessimistic locking)
         list_account = await SelectAccountVuaviaService(new_order.quantity, new_order.type_product_id, db)
-        if not list_account:
-            raise HTTPException(status_code=404, detail="No available accounts found")
+        if len(list_account) < new_order.quantity:
+            raise HTTPException(status_code=404, detail="Not enough available accounts")
 
-        # Tạo OrderDetail
+        # 9. Tạo OrderDetail
         order_detail = OrderDetail(
             type_product_id=new_order.type_product_id,
             quantity=new_order.quantity,
-            total_amount=new_order.price,  # Giá trước giảm giá
+            total_amount=original_price,  # Giá gốc (trước discount)
             accounts_info=[
                 {
                     "id": account.id,
                     "login_name": account.login_name,
-                    "password": account.password
+                    "password": account.password  # Lưu password để deliver cho customer
                 }
                 for account in list_account
             ],
@@ -110,11 +109,11 @@ async def CreateOrderService(
         db.add(order_detail)
         await db.flush()
 
-        # Tạo Order
+        # 10. Tạo Order
         order = Order(
             user_id=user_id,
             quantity=new_order.quantity,
-            total_amount=total_amount,  # Giá sau giảm giá
+            total_amount=total_amount,  # Giá sau discount
             order_detail_id=order_detail.id,
             status=OrderStatus.COMPLETED,
             time=datetime.now(timezone.utc)
@@ -122,10 +121,10 @@ async def CreateOrderService(
         db.add(order)
         await db.flush()
 
-        # Tạo VoucherUsage (nếu có)
-        if new_order.voucher_id:
+        # 11. Tạo VoucherUsage (nếu có voucher)
+        if voucher:
             voucher_usage = VoucherUsage(
-                voucher_id=new_order.voucher_id,
+                voucher_id=voucher.id,
                 user_id=user_id,
                 order_id=order.id,
                 discount_amount=discount_amount,
@@ -134,38 +133,39 @@ async def CreateOrderService(
             )
             db.add(voucher_usage)
 
-            # Cập nhật Voucher
+            # Cập nhật Voucher usage count
             voucher.used_count += 1
             if voucher.usage_limit_total and voucher.used_count >= voucher.usage_limit_total:
                 voucher.status = "INACTIVE"
                 voucher.is_active = False
 
-        # Cập nhật trạng thái tài khoản
+        # 12. Cập nhật trạng thái accounts
         for account in list_account:
             account.status = StatusAccountVuavia.SOLD
             account.orderdetail_id = order_detail.id
 
-        # Trừ tiền user
+        # 13. Trừ tiền user
         user.balance -= total_amount
 
-        # Xóa cache voucher
-        if new_order.voucher_id:
-            await redis_service.delete_voucher_cache(user_id)
-
-        
-        # ghi lịch sử giao dịch trừ tiền 
+        # 14. Ghi transaction history
         transaction = TransactionHistory(
             user_id=user_id,
             type=TransactionType.PURCHASE,
-            amount=-total_amount,  # Âm để biểu thị trừ tiền
-            description=f"Mua {new_order.quantity} account {type_product.name} với order_id {order.id}",
+            amount=-total_amount,
+            description=f"Mua {new_order.quantity} account {type_product.name}",
             order_id=order.id,
             created_at=datetime.now(timezone.utc)
         )
         db.add(transaction)
+
+        # 15. Xóa voucher cache
+        if new_order.voucher_id:
+            await redis_service.delete_voucher_cache(user_id)
+
+        # 16. Commit tất cả
         await db.commit()
         
-        return MessageSchema(message="Order created successfully")
+        return MessageSchema(message=f"Order completed! You received {new_order.quantity} accounts.")
 
     except HTTPException as http_ex:
         await db.rollback()

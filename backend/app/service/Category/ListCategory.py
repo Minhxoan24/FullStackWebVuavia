@@ -4,9 +4,10 @@ from app.models.Category import Category
 from app.schemas .CategorySchema.InforCategorySchema import InforCategorySchema
 from fastapi import HTTPException
 
+
 async def ListCategoryService( db : AsyncSession = AsyncSession):
     try : 
-        query = await db.execute(select(Category))
+        query = await db.execute(select(Category).order_by(Category.id.asc()))
         categories = query.scalars().all()
         return [InforCategorySchema.model_validate(category) for category in categories]
     except HTTPException as httpex:

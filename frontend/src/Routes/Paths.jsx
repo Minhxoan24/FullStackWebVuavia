@@ -24,6 +24,14 @@ const PATHS = {
     TIP_USE_FACE: "/tip-use-face",
     TIP_CREATE_ADS: "/tip-create-ads",
     PROXY_TUTORIAL: "/proxy-tutorial",
+
+    // Thêm paths cho user pages
+    PAGE_ACCOUNT: "/account",
+    MY_ACCOUNT: "/my-account",
+    MY_ORDERS: "/my-orders",
+    TRANSACTION_HISTORY: "/transaction-history",
+    RECHARGE: "/recharge",
+    OVERVIEW: "/overview"
 };
 
 export default PATHS;

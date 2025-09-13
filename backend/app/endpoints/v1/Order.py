@@ -8,12 +8,15 @@ from app.schemas.Order.ResponseOrder import OrderResponseSchema
 from app.schemas.OrderDetail.ResponseOrderDetailSchema import ResponseOrderDetailSchema  
 from app.schemas.Message.Message import MessageSchema
 from app.schemas.Order.ApplyVoucher import ApplyVoucherRequest, ApplyVoucherResponse
+from app.schemas.Order.CheckVoucherRequest import CheckVoucherRequest
+from app.schemas.VoucherSchema.VoucherWithApplicabilitySchema import VoucherWithApplicabilitySchema
 
 from app.service.OrderAndOrderDetail.CreateOrder import CreateOrderService
 from app.service.OrderAndOrderDetail.CancleVoucher import cancel_voucher as order_cancel_voucher
 from app.service.OrderAndOrderDetail.ApplyVoucher import apply_voucher
 from app.service.OrderAndOrderDetail.InformationOrder import InformationOrderService
 from app.service.OrderAndOrderDetail.InformationOrderDetail import InformationOrderDetailService
+from app.service.Voucher.CheckVouchersForOrder import check_vouchers_for_order
 
 router = APIRouter(tags=["Order"], prefix="/orders")
 
@@ -55,6 +58,23 @@ async def cancel_voucher_endpoint(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error cancelling voucher: {str(e)}")
 
+@router.post("/vouchers/check", response_model=list[VoucherWithApplicabilitySchema])
+async def check_vouchers_for_order_endpoint(
+    request: CheckVoucherRequest,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_async_session)
+):
+    """
+    Kiểm tra tất cả voucher của user và trả về với thông tin can_apply = True/False
+    Sử dụng khi user chọn sản phẩm và số lượng, trước khi áp dụng voucher
+    """
+    try:
+        return await check_vouchers_for_order(request, current_user.id, db)
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error checking vouchers: {str(e)}")
+
 @router.get("/my-orders", response_model=list[OrderResponseSchema])  
 async def get_my_orders(
     current_user: User = Depends(get_current_user),
@@ -68,7 +88,7 @@ async def get_my_orders(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error getting orders: {str(e)}")
 
-@router.get("/{order_id}", response_model=ResponseOrderDetailSchema)  
+@router.get("/order/orderDetail{order_id}", response_model=ResponseOrderDetailSchema)  
 async def get_order_detail(
     order_id: int,
     current_user: User = Depends(get_current_user),

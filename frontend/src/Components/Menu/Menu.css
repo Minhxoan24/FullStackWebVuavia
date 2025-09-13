@@ -1,0 +1,27 @@
+/* .dropdown-menu {
+    list-style: none;
+    margin: 0;
+    padding: 8px 0;
+    background: #fff;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.dropdown-item {
+    padding: 10px 16px;
+    font-size: 14px;
+    color: #ba521a;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.dropdown-item:hover {
+    background: #f57c00;
+    color: white;
+}
+
+.dropdown-item.logout {
+    color: red;
+    font-weight: bold;
+} */

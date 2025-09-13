@@ -52,15 +52,15 @@ async def delete_voucher_admin(
     # Sửa function call để khớp với service signature
     return await delete_voucher(db, voucher_delete.id)
 
-@router.get("/my-voucher", response_model=list[VoucherResponseSchema]) 
+@router.get("/my-vouchers", response_model=list[VoucherResponseSchema]) 
 async def get_my_voucher(
     db: AsyncSession = Depends(get_async_session),
     current_user: User = Depends(get_current_user)
 ):
     return await get_user_vouchers(db, current_user.id)  # Sửa function call
 
-@router.get("/available-voucher", response_model=list[VoucherResponseSchema])
-async def get_available_voucher(
+@router.get("/available-vouchers", response_model=list[VoucherResponseSchema])
+async def get_available_vouchers(
     available_vouchers_request: AvailableVouchersRequest,
     db: AsyncSession = Depends(get_async_session),
     current_user: User = Depends(get_current_user)
