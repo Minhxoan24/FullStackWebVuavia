@@ -7,14 +7,16 @@ const ListItemNavbar = [
     { name: "Home", path: Path.HOME },
     { name: "Acc VIỆT", path: Path.ACC_VIET },
     { name: "Acc NGOẠI", path: Path.ACC_NGOAI },
+    { name: "Acc SPAM", path: Path.ACC_SPAM },
     { name: "Acc XMDT", path: Path.ACC_XMDT },
     { name: "Acc 902", path: Path.ACC_902 },
     { name: "ZALO", path: Path.ZALO },
     { name: "CLONE", path: Path.CLONE },
     { name: "MAIL OUTLOOK", path: Path.OUTLOOK },
     { name: "SWITTER", path: Path.SWITTER },
+
     { name: "THỦ THUẬT", path: Path.THU_THUAT },
-    { name: "Acc SPAM", path: Path.ACC_SPAM },
+
 ];
 
 const Navbar = () => {

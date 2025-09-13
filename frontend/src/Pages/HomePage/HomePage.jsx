@@ -93,21 +93,23 @@ const HomePage = () => {
                 </div>
 
                 {/* Danh mục sản phẩm */}
-                {dataTypeProduct.map((category) => (
-                    <div key={category.id} className="mb-5">
-                        <h4 className="category-title fw-bold mb-2 text-warning">
-                            {category.name}
-                        </h4>
-
-                        <div className="row row-cols-1 row-cols-md-4 g-2">
-                            {category.type_products.map((product) => (
-                                <div key={product.id} className="col">
-                                    <ProductCard product={product} />
-                                </div>
-                            ))}
+                <div className="ContainerProduct">
+                    {dataTypeProduct.map((category) => (
+                        <div key={category.id} className="mb-5">
+                            <h4 className="category-title fw-bold" style={{ textAlign: "left" }}>
+                                {category.name}
+                            </h4>
+                            <hr style={{ border: "2px solid #F39C12", width: "100%", marginLeft: 0 }} />
+                            <div className="row row-cols-1 row-cols-md-4 g-3 mt-2 px-2">
+                                {category.type_products.map((product) => (
+                                    <div key={product.id} className="col">
+                                        <ProductCard product={product} />
+                                    </div>
+                                ))}
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    ))}
+                </div>
             </div>
         </div>
     );

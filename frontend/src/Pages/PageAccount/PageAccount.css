@@ -1,109 +1,42 @@
-.my-order-container {
-    display: flex;
-    min-height: 100vh;
-    /* Chiếm toàn màn hình */
-    background-color: #f5f5f5;
-    /* Nền xám nhạt */
+/* Container của sidebar */
+.account-sidebar {
+    border-radius: 12px;
+    padding: 12px;
 }
 
-/* Sidebar bên trái */
-.sidebar {
-    width: 250px;
-    /* Chiều rộng cố định */
-    background-color: white;
-    padding: 20px;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-    position: sticky;
-    /* Giữ sidebar khi scroll */
-    top: 0;
-    height: 100vh;
-}
-
-.sidebar h2 {
-    color: #f57c00;
-    /* Màu cam */
-    margin-bottom: 20px;
-    font-size: 18px;
-}
-
-.sidebar-menu {
-    list-style: none;
-    padding: 0;
-}
-
-.sidebar-menu li {
-    margin-bottom: 10px;
-}
-
-.sidebar-link {
-    display: block;
-    padding: 10px 15px;
-    color: #333;
-    text-decoration: none;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-}
-
-.sidebar-link:hover {
-    background-color: #f57c00;
-    color: white;
-}
-
-.sidebar-link.active {
-    background-color: #f57c00;
-    color: white;
-    font-weight: bold;
-}
-
-/* Nội dung chính bên phải */
-.main-content {
-    flex: 1;
-    /* Chiếm không gian còn lại */
-    padding: 20px;
-    background-color: white;
-    margin: 20px;
+/* List item chung */
+.account-sidebar .list-group-item {
+    border: none;
     border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.main-content h1 {
-    color: #f57c00;
-    margin-bottom: 20px;
-}
-
-/* Danh sách đơn hàng */
-.orders-list {
+    margin-bottom: 8px;
+    font-size: 15px;
+    font-weight: 500;
     display: flex;
-    flex-direction: column;
-    gap: 15px;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    transition: all 0.2s ease-in-out;
 }
 
-.order-item {
-    border: 1px solid #ddd;
-    padding: 15px;
-    border-radius: 5px;
-    background-color: #fafafa;
+/* Hover */
+.account-sidebar .list-group-item:hover {
+    background-color: #f3f4f6;
+    /* xám nhạt */
+    cursor: pointer;
 }
 
-.order-item h3 {
-    margin: 0 0 10px 0;
-    color: #333;
+/* Active */
+.account-sidebar .list-group-item.active {
+    background-color: #fff4f0;
+    border: 1px solid #ff7846;
+    color: #ff5722;
+    font-weight: 600;
 }
 
-/* Responsive cho mobile */
-@media (max-width: 768px) {
-    .my-order-container {
-        flex-direction: column;
-        /* Sidebar lên trên, content xuống dưới */
-    }
-
-    .sidebar {
-        width: 100%;
-        height: auto;
-        position: static;
-    }
-
-    .main-content {
-        margin: 10px;
-    }
+/* Icon giả lập (có thể dùng react-icons) */
+.account-sidebar .list-group-item::before {
+    font-family: "Font Awesome 5 Free";
+    /* Nếu dùng FA */
+    font-weight: 900;
+    margin-right: 8px;
 }

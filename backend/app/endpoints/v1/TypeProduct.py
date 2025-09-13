@@ -9,6 +9,8 @@ from app.schemas.Message.Message import MessageSchema
 from app.service.TypeProduct.CreateTypeProductService import CreateTypeProductService
 from app.service.TypeProduct.UpdateTypeProductService import UpdateTypeProductService
 from app.service.TypeProduct.DeleteTypeProductService import DeleteTypeProductService
+from app.service.TypeProduct.ListTypeProduct import ListTypeProductByCategory
+
 
 from app.service.TypeProduct.DetailTypeProduct import DetailTypeProductService
 from app.service.Category.ListCateAndTypeProduct import Detail_List_TypeProduct
@@ -35,3 +37,6 @@ async def detail_type_product(item_id: int, db: AsyncSession = Depends(get_async
 async def list_categories_with_products(db: AsyncSession = Depends(get_async_session)):
     """Lấy danh sách category kèm type products"""
     return await Detail_List_TypeProduct(db)
+@router.get("/list-TypeProduct/{id_category}", response_model=list[InforTypeProductSchema])
+async def list_type_products_by_category(id_category: int, db: AsyncSession = Depends(get_async_session)):
+    return await ListTypeProductByCategory(id_category, db)

@@ -7,7 +7,7 @@ import { FiSearch } from 'react-icons/fi';
 import './Header.css';
 import ModalLogin from '../Modal/ModalLogin/ModalLogin';
 import { AuthContext } from '../../Context/AuthContext';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, NavLink } from 'react-router-dom';
 import DefaultAvt from '../../Assets/Logo/Logo';
 
 
@@ -98,12 +98,12 @@ const Header = () => {
                                 <div className="dropdown">
                                     <ul className="dropdown-menu">
 
-                                        <li><Link className="dropdown-item" onClick={handleClickPageAccount}>Trang Tài Khoản</Link></li>
-                                        <li><Link className="dropdown-item" onClick={handleClickMyOrders}>Đơn Hàng Của Tôi</Link></li>
-                                        <li><Link className="dropdown-item" onClick={handleClickAccount}> Tài Khoản </Link></li>
-                                        <li><Link className="dropdown-item" onClick={handleClickRecharge}> Nạp Tiền </Link></li>
-                                        <li><Link className="dropdown-item" onClick={handleClickTransactionHistory}>Lịch Sử Giao Dịch</Link></li>
-                                        <li><Link className="dropdown-item" onClick={handleClickLogout} >Đăng Xuất</Link></li>
+                                        <li><Link className="dropdown-item" onClick={handleClickPageAccount} to="/account">Trang Tài Khoản</Link></li>
+                                        <li><Link className="dropdown-item" onClick={handleClickMyOrders} to="/my-orders">Đơn Hàng Của Tôi</Link></li>
+                                        <li><Link className="dropdown-item" onClick={handleClickAccount} to="/account"> Tài Khoản </Link></li>
+                                        <li><Link className="dropdown-item" onClick={handleClickRecharge} to="/recharge"> Nạp Tiền </Link></li>
+                                        <li><Link className="dropdown-item" onClick={handleClickTransactionHistory} to="/transaction-history">Lịch Sử Giao Dịch</Link></li>
+                                        <li><Link className="dropdown-item" onClick={handleClickLogout} to="/">Đăng Xuất</Link></li>
 
                                     </ul>
                                 </div>

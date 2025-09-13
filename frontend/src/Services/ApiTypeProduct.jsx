@@ -63,5 +63,14 @@ const deleteTypeProduct = async (id) => {
         throw error;
     }
 }
+const getListtypeproductByCateGory = async (id_category) => {
+    try {
+        const res = await apiClient.get(`/type-product/list-TypeProduct/${id_category}`);
+        return res.data;
+    } catch (error) {
+        console.error("Error fetching type products by category:", error);
+        throw error;
+    }
+}
 
-export { getAllProductswithcategory, getAllTypeProducts, getAllTypeProductByIdCategory, getTypeProductById, postTypeProduct, putTypeProduct, deleteTypeProduct };
+export { getAllProductswithcategory, getAllTypeProducts, getAllTypeProductByIdCategory, getTypeProductById, postTypeProduct, putTypeProduct, deleteTypeProduct, getListtypeproductByCateGory };

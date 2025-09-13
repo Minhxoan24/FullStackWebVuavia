@@ -11,6 +11,15 @@ import share13 from './viec-dang-bai-vao-cac-khung-gio-ma-nguoi-dung-thuong-mua-
 import share14 from './Khung-gio-vang-Facebook.jpg';
 import DefaultAvt from './DefaultAVT.jpg';
 import LogoOverView from './logo-OverView.png';
+import LogoAccViet from './icon-facebook-banner.png';
+import LogoAccNgoai from './Mua-Via-Ngoai-Indo-Phi-US-An-Da-co-2FA-Uy-Tin-XMDT-2-1024x939.png';
+import LogoAccSpam from './Mua-Via-Facebook-Chuyen-dung-cho-spam-seeding-1024x939.png';
+import LogoAccXMDT from './xmdt.png';
+import LogoAcc902 from './xmdt.png';
+import LogoZAlo from './tai-khoan-zalo-1024x994.png';
+import LogoClone from './clone.png';
+import LogoMailOutLook from './hotmail.png';
+import logoTwitter from './mua-tai-khoan-twitter-1024x1024.png';
 
 const Logo = {
     Banner,
@@ -24,6 +33,16 @@ const Logo = {
     share13,
     share14,
     DefaultAvt,
-    LogoOverView
+    LogoOverView,
+    LogoAccViet,
+    LogoAccNgoai,
+    LogoAccSpam,
+    LogoAccXMDT,
+    LogoAcc902,
+    LogoZAlo,
+    LogoClone,
+    LogoMailOutLook,
+    logoTwitter
+
 };
 export default Logo;

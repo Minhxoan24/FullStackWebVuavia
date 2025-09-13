@@ -31,7 +31,9 @@ const PATHS = {
     MY_ORDERS: "/my-orders",
     TRANSACTION_HISTORY: "/transaction-history",
     RECHARGE: "/recharge",
-    OVERVIEW: "/overview"
+    OVERVIEW: "/overview",
+    ORDER_DETAIL: "/order-detail/:orderId",
+    MY_VOUCHER: "/my-voucher",
 };
 
 export default PATHS;
