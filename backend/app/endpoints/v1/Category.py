@@ -20,9 +20,10 @@ router = APIRouter(prefix="/category", tags=["Category"])
 @router.post("/create", response_model=InforCategorySchema)
 async def create_category(category_new: CreateCategorySchema, db: AsyncSession = Depends(get_async_session)):
    return await CreatecategoryServices(category_new, db)
-@router.put("/update", response_model= MessageSchema)
-async def update_category(category_update: UpdateCategorySchema, db: AsyncSession = Depends(get_async_session)):
-    return await ServiceUpdateCategory(category_update, db)
+@router.put("/update/{id}", response_model= MessageSchema)
+
+async def update_category( Category_id : int , category_update: UpdateCategorySchema, db: AsyncSession = Depends(get_async_session)):
+    return await ServiceUpdateCategory(Category_id ,  category_update, db)
 @router.delete("/delete", response_model=MessageSchema)
 async def delete_category(category_delete: DeleteCategorySchema, db: AsyncSession = Depends(get_async_session)):
     return await ServiceDeleteCategory(category_delete, db)

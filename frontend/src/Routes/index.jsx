@@ -20,6 +20,15 @@ import TIPS from '../Pages/ShareNew/Tips/Tips.jsx';
 import TipCreateADS from '../Pages/ShareNew/TipCreateADS/TipCreateADS.jsx';
 import TipUseface from '../Pages/ShareNew/TipUseFace/TipUseFace.jsx';
 import ProxyTutorial from '../Pages/ShareNew/ProxyTutorial/ProxyTutorial.jsx';
+
+import MyAccount from '../Pages/MyAccount/MyAccount.jsx';
+import MyOrders from '../Pages/MyOrder/MyOrder.jsx';
+import OrderDetail from '../Pages/OrderDetail/OrderDetail.jsx';
+import TransactionHistory from '../Pages/TransactionHistory/TransactionHistory.jsx';
+import ReCharge from '../Pages/ReCharge/ReCharge.jsx';
+import OverView from '../Pages/OverView/OverView.jsx';
+import PageAccount from '../Pages/PageAccount/PageAccount.jsx';
+
 const AppRoutes = () => {
     return (
         <Routes>
@@ -41,6 +50,13 @@ const AppRoutes = () => {
                 <Route path={Path.TIP_USE_FACE} element={<TipUseface />} />
                 <Route path={Path.TIP_CREATE_ADS} element={<TipCreateADS />} />
                 <Route path={Path.PROXY_TUTORIAL} element={<ProxyTutorial />} />
+                <Route path={Path.MY_ACCOUNT} element={<MyAccount />} />
+                <Route path={Path.MY_ORDERS} element={<MyOrders />} />
+                <Route path={Path.TRANSACTION_HISTORY} element={<TransactionHistory />} />
+                <Route path={Path.RECHARGE} element={<ReCharge />} />
+                <Route path={Path.OVERVIEW} element={<OverView />} />
+                <Route path={Path.ORDER_DETAIL} element={<OrderDetail />} />
+                <Route path={Path.PAGE_ACCOUNT} element={<PageAccount />} />
             </Route>
 
         </Routes>

@@ -26,4 +26,4 @@ const logout = async () => {
   delete apiClient.defaults.headers.common['Authorization'];
 };
 
-export default { login, register, logout };
+export default { login, register, logout  };

@@ -1,0 +1,10 @@
+.logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.text-content {
+    text-align: center;
+}

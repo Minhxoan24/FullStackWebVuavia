@@ -39,8 +39,12 @@ const ModalLogin = ({ show, handleClose }) => {
         try {
             const data = await login(formModalLogin);
             alert("Login successful!");
-            console.log("Login successful:", data);
-            // Redirect to homepage or dashboard
+            setFormModalLogin({
+                accountname: "",
+                password: "",
+            });
+            handleClose(); // Đóng modal sau khi đăng nhập thành công
+            navigate('/'); // Chuyển hướng sang trang chủ (hoặc trang bạn muốn)
         } catch (error) {
             console.error("Login failed:", error);
             alert("Login failed:" + (error.response?.data?.message || error.message));
