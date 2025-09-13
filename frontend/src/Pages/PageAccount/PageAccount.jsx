@@ -1,44 +1,115 @@
-import React from 'react';
-import { Link } from 'react-router-dom';  // Để link đến các trang khác
-import './PageAccount.css';  // Import CSS riêng
+import React, { useState, useContext } from "react";
+import { Container, Row, Col, Card, ListGroup } from "react-bootstrap";
+import { AuthContext } from '../../Context/AuthContext';
+import './PageAccount.css';
+
+
+import MyAccount from '../../Pages/MyAccount/MyAccount.jsx';
+import MyOrders from '../../Pages/MyOrder/MyOrder.jsx';
+
+import TransactionHistory from '../../Pages/TransactionHistory/TransactionHistory.jsx';
+import ReCharge from '../../Pages/ReCharge/ReCharge.jsx';
+import OverView from '../../Pages/OverView/OverView.jsx';
+import MyVoucher from "../MyVoucher/MyVoucher.jsx";
+import HomePage from "../HomePage/HomePage.jsx";
+
+
 
 const PageAccount = () => {
+    const { user, logout } = useContext(AuthContext);
+    const [activePage, setActivePage] = useState("OverView");
+
+    // map tên page với component
+    const renderContent = () => {
+        switch (activePage) {
+            case "OverView": return <OverView />;
+            case "MyOrders": return <MyOrders />;
+            case "TransactionHistory": return <TransactionHistory />;
+            case "ReCharge": return <ReCharge />;
+            case "MyAccount": return <MyAccount />;
+            case "promotions": return <MyVoucher />;
+            case "logout": logout(); return <HomePage />;
+            default: return <OverView />;
+
+        }
+
+    };
+
     return (
-        <div className="my-account-container">
-            {/* Sidebar bên trái */}
-            <aside className="sidebar">
-                <h2>Menu Tài Khoản</h2>
-                <ul className="sidebar-menu">
-                    <li><Link to="/account" className="sidebar-link">Trang Tài Khoản</Link></li>
-                    <li><Link to="/orders" className="sidebar-link active">Đơn Hàng Của Tôi</Link></li>
-                    <li><Link to="/profile" className="sidebar-link">Tài Khoản</Link></li>
-                    <li><Link to="/deposit" className="sidebar-link">Nạp Tiền</Link></li>
-                    <li><Link to="/transactions" className="sidebar-link">Lịch Sử Giao Dịch</Link></li>
-                    <li><Link to="/logout" className="sidebar-link">Đăng Xuất</Link></li>
-                </ul>
-            </aside>
+        <Container className="my-4">
+            <Row>
+                {/* Sidebar */}
+                <Col md={3}>
+                    <div className="shadow-sm p-3 text-center">
+                        <img
+                            src={user.avatar || "https://via.placeholder.com/100"}
+                            alt="Avatar"
+                            className="rounded-circle"
+                            style={{ width: "100px", height: "100px" }}
+                        />
+                        <h6 className="mt-3 mb-0">{user.surname + ' ' + user.name}</h6>
+                        <small className="text-muted">{user.email}</small>
 
-            {/* Nội dung chính bên phải */}
-            <main className="main-content">
-                <h1>Trang Đơn Hàng</h1>
-                <p>Đây là nơi hiển thị danh sách đơn hàng của bạn.</p>
+                        <ListGroup className="mt-4 account-sidebar" variant="flush">
+                            <ListGroup.Item
+                                action
+                                active={activePage === "OverView"}
+                                onClick={() => setActivePage("OverView")}
+                            >
+                                <i className="bi bi-speedometer2"></i> Trang tổng quan
+                            </ListGroup.Item>
+                            <ListGroup.Item
+                                action
+                                active={activePage === "MyOrders"}
+                                onClick={() => setActivePage("MyOrders")}
+                            >
+                                <i className="bi bi-receipt"></i> Đơn hàng của bạn
+                            </ListGroup.Item>
+                            <ListGroup.Item
+                                action
+                                active={activePage === "TransactionHistory"}
+                                onClick={() => setActivePage("TransactionHistory")}
+                            >
+                                <i className="bi bi-clock-history"></i> Lịch sử giao dịch
+                            </ListGroup.Item>
+                            <ListGroup.Item
+                                action
+                                active={activePage === "ReCharge"}
+                                onClick={() => setActivePage("ReCharge")}
+                            >
+                                <i className="bi bi-wallet2"></i> Nạp tiền
+                            </ListGroup.Item>
+                            <ListGroup.Item
+                                action
+                                active={activePage === "MyAccount"}
+                                onClick={() => setActivePage("MyAccount")}
+                            >
+                                <i className="bi bi-person-lines-fill"></i> Thay đổi thông tin tài khoản
+                            </ListGroup.Item>
+                            <ListGroup.Item
+                                action
+                                active={activePage === "promotions"}
+                                onClick={() => setActivePage("promotions")}
+                            >
+                                <i className="bi bi-gift"></i> Khuyến mãi của bạn
+                            </ListGroup.Item>
+                            <ListGroup.Item action onClick={() => setActivePage("logout")}>
+                                <i className="bi bi-box-arrow-right"></i> Đăng xuất
+                            </ListGroup.Item>
+                        </ListGroup>
+                    </div>
+                </Col>
 
-                {/* Ví dụ nội dung đơn hàng (bạn tự thêm data từ API) */}
-                <div className="orders-list">
-                    <div className="order-item">
-                        <h3>Đơn hàng #12345</h3>
-                        <p>Trạng thái: Đang xử lý</p>
-                        <p>Tổng tiền: 500.000 đ</p>
-                    </div>
-                    <div className="order-item">
-                        <h3>Đơn hàng #12346</h3>
-                        <p>Trạng thái: Hoàn thành</p>
-                        <p>Tổng tiền: 300.000 đ</p>
-                    </div>
-                    {/* Thêm nhiều item từ API */}
-                </div>
-            </main>
-        </div>
+                {/* Main content */}
+                <Col md={9}>
+                    <Card className="shadow-sm p-3 border-0">
+                        <Card.Body>
+                            {renderContent()}
+                        </Card.Body>
+                    </Card>
+                </Col>
+            </Row>
+        </Container>
     );
 };
 

@@ -24,7 +24,7 @@ const MainLayout = () => {
             </div>
 
             {/* Nội dung chính */}
-            <div style={{ paddingTop: "160px" }}>
+            <div style={{ paddingTop: "110px" }}>
                 <main>
                     <Outlet />
                 </main>

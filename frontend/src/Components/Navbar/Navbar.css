@@ -4,7 +4,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 12px 20px;
+
   gap: 24px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
   border-bottom: 2px solid #e67e22;
@@ -18,7 +18,7 @@
   text-decoration: none;
   font-size: 14px;
   letter-spacing: 0.5px;
-  padding: 4px 8px;
+
   transition: color 0.3s ease;
 }
 

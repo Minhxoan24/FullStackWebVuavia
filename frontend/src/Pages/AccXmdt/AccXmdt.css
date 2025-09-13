@@ -1,0 +1,51 @@
+/* Banner */
+.banner-section {
+    background: linear-gradient(135deg, #e6f0ff, #2c71d8);
+    padding: 20px 50px;
+    /* giảm padding để sát navbar */
+    margin-top: 0;
+}
+
+.banner-section h2 {
+    font-size: 28px;
+    line-height: 1.4;
+    color: #002b5c;
+}
+
+.banner-section p {
+    font-size: 16px;
+    color: #333;
+}
+
+.banner-section button {
+    border-radius: 20px;
+    padding: 8px 20px;
+    font-weight: 600;
+}
+
+/* Content */
+.content-section {
+    padding: 40px 15px;
+    margin: 0 auto;
+    max-width: 1100px;
+}
+
+.category-title {
+    font-size: 22px;
+    color: #F39C12;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .banner-section h2 {
+        font-size: 22px;
+    }
+
+    .banner-section p {
+        font-size: 14px;
+    }
+
+    .content-section {
+        padding: 20px 10px;
+    }
+}

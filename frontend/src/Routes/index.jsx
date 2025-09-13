@@ -28,6 +28,8 @@ import TransactionHistory from '../Pages/TransactionHistory/TransactionHistory.j
 import ReCharge from '../Pages/ReCharge/ReCharge.jsx';
 import OverView from '../Pages/OverView/OverView.jsx';
 import PageAccount from '../Pages/PageAccount/PageAccount.jsx';
+import MyVoucher from '../Pages/MyVoucher/MyVoucher.jsx';
+
 
 const AppRoutes = () => {
     return (
@@ -57,6 +59,7 @@ const AppRoutes = () => {
                 <Route path={Path.OVERVIEW} element={<OverView />} />
                 <Route path={Path.ORDER_DETAIL} element={<OrderDetail />} />
                 <Route path={Path.PAGE_ACCOUNT} element={<PageAccount />} />
+                <Route path={Path.MY_VOUCHER} element={<MyVoucher />} />
             </Route>
 
         </Routes>
