@@ -10,7 +10,7 @@ async def get_all_voucher_byAdmin(db: AsyncSession) -> list[VoucherResponseSchem
     try:
         result = await db.execute(select(Voucher))
         vouchers = result.scalars().all()
-        return [VoucherResponseSchema.from_orm(voucher) for voucher in vouchers]
+        return [VoucherResponseSchema.model_validate(voucher) for voucher in vouchers]
     except HTTPException as httpex:
         raise httpex
     except Exception as e:

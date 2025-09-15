@@ -52,9 +52,12 @@ async def UpdateAccountVuaviaService(account_id: int, account_update: UpdateVuav
                 .values(**update_data)
             )
             await db.commit()
-        
-        return MessageSchema(message="Account updated successfully")
-        
+
+        return MessageSchema(
+            status="success",
+            message="Account updated successfully"
+        )
+
     except HTTPException as httpex:
         await db.rollback()
         raise httpex  

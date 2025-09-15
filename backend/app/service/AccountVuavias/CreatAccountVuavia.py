@@ -38,8 +38,11 @@ async def CreateAccountVuaviaService(account_vuavia: CreateVuaviaSchema, db: Asy
         await db.commit()
         await db.refresh(new_account)
         
-        return MessageSchema(message="Account created successfully")
-        
+        return MessageSchema(
+            status="success",
+            message="Account created successfully"
+        )
+
     except HTTPException as httpex: 
         raise httpex
     except Exception as e:

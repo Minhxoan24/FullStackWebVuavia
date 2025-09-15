@@ -14,6 +14,7 @@ class TypeProduct(Base):
 
     description = Column(JSONB, nullable=True)
     
+    
     # Foreign Key
 
     category_id = Column(Integer, ForeignKey("categories.id", ondelete="CASCADE"), nullable=False)
@@ -22,4 +23,5 @@ class TypeProduct(Base):
     category = relationship("Category", back_populates="type_products")
     account_vuavias = relationship("AccountVuavia", back_populates="type_product")
     order_details = relationship("OrderDetail", back_populates="type_product")
-   
+
+    information = relationship("InforTypeProduct", back_populates="type_product", uselist=False)

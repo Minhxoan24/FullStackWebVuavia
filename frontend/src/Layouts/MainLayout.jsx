@@ -12,7 +12,6 @@ const MainLayout = () => {
             {/* Phần cố định trên cùng */}
             <div className="fixed-top">
                 {/* Header */}
-
                 <Header />
 
 

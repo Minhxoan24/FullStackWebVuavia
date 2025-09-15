@@ -32,9 +32,9 @@ const ProductCard = ({ product }) => {
 
                 {/* Giá */}
                 <div className="mb-3">
-                    <span className="text-muted text-decoration-line-through me-2">
+                    {/* <span className="text-muted text-decoration-line-through me-2">
                         {(product?.price * 1.2).toLocaleString("vi-VN")} ₫
-                    </span>
+                    </span> */}
                     <span className="text-danger fw-bold fs-5">
                         {product?.price?.toLocaleString("vi-VN") || 0} ₫
                     </span>

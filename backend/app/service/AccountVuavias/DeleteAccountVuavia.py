@@ -16,7 +16,10 @@ async def DeleteAccountVuaviaService(account_id: int, db: AsyncSession):
         await db.execute(delete(AccountVuavia).where(AccountVuavia.id == account_id))
         await db.commit()
 
-        return MessageSchema(message="Account deleted successfully")
+        return MessageSchema(
+            status="success",
+            message="Account deleted successfully"
+        )
 
     except HTTPException as httpex:
         raise httpex
