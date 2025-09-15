@@ -61,7 +61,10 @@ async def UpdateAccountInformationService(
         await db.commit()
         await db.refresh(user)
 
-        return MessegeUpdateSchema(message="User information updated successfully")
+        return MessegeUpdateSchema(
+            status="success",
+            message="Account information updated successfully"
+        )
         
     except HTTPException:
         raise

@@ -57,7 +57,7 @@ async def get_my_voucher(
     db: AsyncSession = Depends(get_async_session),
     current_user: User = Depends(get_current_user)
 ):
-    return await get_user_vouchers(db, current_user.id)  # Sửa function call
+    return await get_user_vouchers(db, current_user.id)  
 
 @router.get("/available-vouchers", response_model=list[VoucherResponseSchema])
 async def get_available_vouchers(

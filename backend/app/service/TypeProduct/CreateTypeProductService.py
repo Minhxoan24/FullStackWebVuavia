@@ -7,11 +7,11 @@ from app.schemas.TypeProductSchema.InforTypeProductSchema import InforTypeProduc
 from app.schemas.Message.Message import MessageSchema
 async def CreateTypeProductService(type_product_data: CreateTypeProductSchema, db: AsyncSession):
     try:
-        query = select(TypeProduct).where(TypeProduct.name == type_product_data.name)
-        result = await db.execute(query)
-        Tp = result.scalar_one_or_none()
-        if Tp is not None:
-            raise HTTPException(status_code=400, detail="Type product already exists")
+        # query = select(TypeProduct).where(TypeProduct.name == type_product_data.name)
+        # result = await db.execute(query)
+        # Tp = result.scalar_one_or_none()
+        # if Tp is not None:
+        #     raise HTTPException(status_code=400, detail="Type product already exists")
 
         new_type_product = TypeProduct(
             name=type_product_data.name, 

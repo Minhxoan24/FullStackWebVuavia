@@ -19,3 +19,16 @@ class InforTypeProductSchema(BaseModel):
 
     class Config:
         from_attributes = True
+
+class InforTypeProductDetailSchema(BaseModel):
+    id: int
+    name: str
+    description: Optional[JsonType] = None
+    price: float
+    image: str
+    category_id: int
+    quantity : Optional[int] = None
+    
+
+    class Config:
+        from_attributes = True

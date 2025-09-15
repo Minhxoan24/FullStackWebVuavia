@@ -32,8 +32,8 @@ async def ChangePasswordService(
         await db.refresh(current_user)
         
         return ChangePasswordResponse(
-            message="Thay đổi mật khẩu thành công",
-            success=True
+            message="Mật khẩu đã được thay đổi thành công",
+            status ="success"
         )
         
     except HTTPException:

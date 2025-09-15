@@ -14,7 +14,7 @@ const Zalo = () => {
         const fetchData = async () => {
             try {
                 setLoading(true);
-                const data = await getListtypeproductByCateGory(3);
+                const data = await getListtypeproductByCateGory(11);
                 setDataTypeProduct(data || []);
                 console.log("Sản phẩm đã tải:", data);
                 setError(null);

@@ -14,7 +14,7 @@ const AccSpam = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const data = await getListtypeproductByCateGory(3);
+        const data = await getListtypeproductByCateGory(5);
         setDataTypeProduct(data || []);
         console.log("Sản phẩm đã tải:", data);
         setError(null);

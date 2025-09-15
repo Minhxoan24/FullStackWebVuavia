@@ -7,6 +7,7 @@ const ProductCard = ({ product }) => {
     // descriptionData là object trực tiếp từ product.description
     const descriptionData = product.description || {};
 
+
     return (
         <div className="card product-card shadow-sm h-100">
             {/* Ảnh sản phẩm */}
@@ -26,9 +27,9 @@ const ProductCard = ({ product }) => {
 
                 {/* Giá */}
                 <div className="mb-3">
-                    <span className="text-muted text-decoration-line-through me-2">
+                    {/* <span className="text-muted text-decoration-line-through me-2">
                         {(product?.price * 1.2).toLocaleString("vi-VN")} ₫
-                    </span>
+                    </span> */}
                     <span className="text-danger fw-bold fs-5">
                         {product?.price?.toLocaleString("vi-VN") || 0} ₫
                     </span>

@@ -3,15 +3,18 @@ from sqlalchemy.sql import select
 from sqlalchemy.orm import joinedload
 from fastapi import HTTPException
 from app.models.TypeProduct import TypeProduct
-from app.schemas.TypeProductSchema.InforTypeProductSchema import InforTypeProductSchema
+from app.schemas.TypeProductSchema.InforTypeProductSchema import InforTypeProductDetailSchema
 from app.service.AccountVuavias.CountAccount import CountAccountVuaviaService
 import json
 
-async def DetailTypeProductService(type_product_id: int, db: AsyncSession) -> InforTypeProductSchema:
+async def DetailTypeProductService(type_product_id: int, db: AsyncSession) -> InforTypeProductDetailSchema:
     """
     Service lấy thông tin chi tiết TypeProduct kèm số lượng account khả dụng
     """
     try:
+        query = select(TypeProduct).options(
+            joinedload(TypeProduct.information)).where(TypeProduct.id == type_product_id)
+        
         # Query với joinedload để lấy thông tin category (nếu cần)
         query = select(TypeProduct).options(
             joinedload(TypeProduct.category)
@@ -34,14 +37,16 @@ async def DetailTypeProductService(type_product_id: int, db: AsyncSession) -> In
             else:
                 description_str = str(type_product.description)
 
-        return InforTypeProductSchema(
+        return InforTypeProductDetailSchema(
             id=type_product.id,
             name=type_product.name,
             description=description_str,
             price=float(type_product.price),  # Đảm bảo convert sang float
             image=type_product.image or "",   # Handle null image
             category_id=type_product.category_id,
-            quantity=count_account
+            quantity=count_account,
+            information=type_product.information.content if type_product.information else ""
+
         )
 
     except HTTPException as httpex:

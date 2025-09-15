@@ -12,6 +12,7 @@ from .AccountVuavia import AccountVuavia
 from .TypeProduct import TypeProduct
 from .Category import Category
 from .VoucherUsage import VoucherUsage
+from .InforTypeProduct import InforTypeProduct
 
 __all__ = [
     "Base",
@@ -25,5 +26,6 @@ __all__ = [
     "AccountVuavia",
     "TypeProduct",
     "Category",
-    "VoucherUsage"
+    "VoucherUsage" , 
+    "InforTypeProduct"
 ]
