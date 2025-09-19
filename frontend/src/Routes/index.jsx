@@ -29,7 +29,7 @@ import ReCharge from '../Pages/ReCharge/ReCharge.jsx';
 import OverView from '../Pages/OverView/OverView.jsx';
 import PageAccount from '../Pages/PageAccount/PageAccount.jsx';
 import MyVoucher from '../Pages/MyVoucher/MyVoucher.jsx';
-
+import DetailTypeProduct from '../Pages/DetailPageTypeProduct/DetailPageTypeProduct.jsx';
 
 const AppRoutes = () => {
     return (
@@ -60,6 +60,7 @@ const AppRoutes = () => {
                 <Route path={Path.ORDER_DETAIL} element={<OrderDetail />} />
                 <Route path={Path.PAGE_ACCOUNT} element={<PageAccount />} />
                 <Route path={Path.MY_VOUCHER} element={<MyVoucher />} />
+                <Route path={Path.DETAIL_TYPE_PRODUCT} element={<DetailTypeProduct />} />
             </Route>
 
         </Routes>

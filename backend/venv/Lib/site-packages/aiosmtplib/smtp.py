@@ -9,6 +9,7 @@ import email.message
 import socket
 import ssl
 from collections.abc import Iterable, Sequence
+from types import TracebackType
 from typing import (
     Any,
     Literal,
@@ -179,7 +180,10 @@ class SMTP:
         return self
 
     async def __aexit__(
-        self, exc_type: type[BaseException], exc: BaseException, traceback: Any
+        self,
+        exc_type: Optional[type[BaseException]],
+        exc: Optional[BaseException],
+        traceback: Optional[TracebackType],
     ) -> None:
         if isinstance(exc, (ConnectionError, TimeoutError)):
             self.close()

@@ -72,5 +72,14 @@ const getListtypeproductByCateGory = async (id_category) => {
         throw error;
     }
 }
+const getinfortypeproduct = async (id) => {
+    try {
+        const res = await apiClient.get(`/information-type-products/${id}`);
+        return res.data;
+    } catch (error) {
+        console.error("Error fetching type product info:", error);
+        throw error;
+    }
+}
 
-export { getAllProductswithcategory, getAllTypeProducts, getAllTypeProductByIdCategory, getTypeProductById, postTypeProduct, putTypeProduct, deleteTypeProduct, getListtypeproductByCateGory };
+export { getAllProductswithcategory, getAllTypeProducts, getAllTypeProductByIdCategory, getTypeProductById, postTypeProduct, putTypeProduct, deleteTypeProduct, getListtypeproductByCateGory, getinfortypeproduct };

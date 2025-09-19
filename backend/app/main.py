@@ -23,7 +23,7 @@ app.include_router(Order.router)
 app.include_router(Voucher.router)
 app.include_router(TransactionHistory.router)
 app.include_router(InformationTypeProduct.router)
-# .\venv\Scripts\activate
+# .\venv\Scripts\Activate.ps1
 # uvicorn app.main:app --reload
 # uvicorn app.main:app --reload --host 0.0.0.0 --port 8000 
 # http://127.0.0.1:8000/docs

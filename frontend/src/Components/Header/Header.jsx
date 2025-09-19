@@ -55,6 +55,9 @@ const Header = () => {
             setBalance(0);
         }
     }, [user]);
+    const formatCurrency = (price) => {
+        return new Intl.NumberFormat("vi-VN").format(price);
+    };
 
     return (
         <div class Name='header-container'>
@@ -112,7 +115,7 @@ const Header = () => {
 
                             <div className="balance-container">
                                 <button className="balance-button">
-                                    SỐ DƯ: {balance} đ
+                                    SỐ DƯ: {formatCurrency(balance)} đ
                                 </button>
                             </div>
                         </div>
