@@ -2,7 +2,7 @@ import { Container, Row, Col, Button } from "react-bootstrap";
 import "./Zalo.css";
 import React, { useState, useEffect } from "react";
 import Logo from "../../Assets/Logo/Logo";
-import ProductCard from "../../Components/Card/ProdcutCard2.jsx";
+import ProductCard from "../../Components/Card/ProductCard.jsx";
 import { getListtypeproductByCateGory } from "../../Services/ApiTypeProduct.jsx";
 
 const Zalo = () => {

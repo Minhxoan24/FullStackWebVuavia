@@ -18,9 +18,9 @@ class AccountVuavia(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     login_name = Column(String(200), nullable=False, unique=True, index=True)  # Thêm unique + index
     password = Column(String(200), nullable=False)
-    created_at = Column(DateTime, nullable=False, default=lambda: datetime.now(timezone.utc))
-    updated_at = Column(DateTime, nullable=False, default=lambda: datetime.now(timezone.utc),
-                        onupdate=lambda: datetime.now(timezone.utc), index=True)  # Index cho timeout cleanup
+    created_at = Column(DateTime(timezone=True), nullable=False, default=lambda: datetime.now(timezone.utc))
+    updated_at = Column(DateTime(timezone=True), nullable=False, default=lambda: datetime.now(timezone.utc))
+ # Index cho timeout cleanup
     status = Column(
         SEA(StatusAccountVuavia, name="status_account_vuavia"),
         nullable=False,

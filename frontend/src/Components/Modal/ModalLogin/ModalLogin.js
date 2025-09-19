@@ -39,6 +39,7 @@ const ModalLogin = ({ show, handleClose }) => {
         try {
             const data = await login(formModalLogin);
             alert("Login successful!");
+            console.log("Login data:", data);
             setFormModalLogin({
                 accountname: "",
                 password: "",

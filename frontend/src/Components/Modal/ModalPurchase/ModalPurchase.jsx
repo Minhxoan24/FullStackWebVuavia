@@ -1,124 +1,163 @@
-import React, { useContext, useState } from "react";
-import { Modal, Button, Form, Alert, Spinner } from "react-bootstrap";
-import { AuthContext } from "../../Context/AuthContext";
+// src/Components/Modal/ModalPurchaseTypeProduct.jsx
+import React, { useEffect, useState } from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { Modal, Button as BootstrapButton } from "react-bootstrap";
 
-const ModalPurchase = ({ show, close, product }) => {
-  const { user } = useContext(AuthContext);
+import SpecList from "../../../Components/Product/SpecList";
+import QuantityInput from "../../../Components/Product/QuantityInput";
+import Button from "../../../Components/Buttons/ButtonBuy";
+import { getTypeProductById } from "../../../Services/ApiTypeProduct";
+import createOrder from "../../../Services/OrderService";
 
-  // State quản lý
-  const [quantity, setQuantity] = useState(1);
-  const [selectedVoucher, setSelectedVoucher] = useState(null);
-  const [vouchers] = useState([]); // bạn có thể load từ API
-  const [success, setSuccess] = useState(false);
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+const ModalPurchaseTypeProduct = ({ show, onClose, id }) => {
+  const [product, setProduct] = useState(null);
+  const [qty, setQty] = useState(1);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Tính tổng tiền
-  const totalPrice = product
-    ? (product.price - (selectedVoucher?.discount || 0)) * quantity
-    : 0;
 
-  // Đóng modal
-  const handleCloseModal = () => {
-    close();
-    setQuantity(1);
-    setSelectedVoucher(null);
-    setError("");
-    setSuccess(false);
-  };
+  // Fetch product detail
+  useEffect(() => {
+    const fetchProduct = async () => {
+      if (!id) return;
 
-  // Áp dụng voucher
-  const handleApplyVoucher = (voucher) => {
-    setSelectedVoucher(voucher);
-  };
+      setLoading(true);
+      setError(null);
 
-  // Xử lý thanh toán
-  const handleCheckout = async () => {
-    setLoading(true);
-    try {
-      // TODO: gọi API thanh toán ở đây
-      setTimeout(() => {
-        setSuccess(true);
+      try {
+        const data = await getTypeProductById(id);
+        setProduct(data);
+      } catch (err) {
+        setError("Lỗi khi tải sản phẩm.");
+        console.error(err);
+      } finally {
         setLoading(false);
-      }, 1500);
-    } catch (err) {
-      setError("Thanh toán thất bại, vui lòng thử lại!");
-      setLoading(false);
+      }
+    };
+
+    if (show && id) {
+      fetchProduct();
     }
+  }, [id, show]);
+
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat("vi-VN").format(price);
   };
 
-  if (!product) return null;
+  // xử lý mua hàng
+  const handleBuy = async (e) => {
+    e.preventDefault();
+    const orderData = {
+      type_product_id: product?.id,
+      quantity: qty,
+
+    };
+
+
+
+    // Call createOrder with the orderData
+    try {
+      const result = await createOrder(orderData);
+      console.log("Order created successfully:", result);
+      alert("Đơn hàng đã được tạo thành công!");
+      onClose();
+
+    }
+    catch (error) {
+      console.error("Error creating order:", error);
+      alert("Đã xảy ra lỗi khi tạo đơn hàng.");
+    }
+
+
+  };
+
+  // Parse description safely
+  let descriptionData = {};
+  try {
+    if (product?.description) {
+      descriptionData =
+        typeof product.description === "string"
+          ? JSON.parse(product.description)
+          : product.description;
+    }
+  } catch (e) {
+    console.error("Lỗi parse description:", e);
+  }
+
 
   return (
-    <Modal show={show} onHide={handleCloseModal} size="lg" centered>
+    <Modal
+      show={show}
+      onHide={onClose}
+      size="lg"
+      centered
+      backdrop={true}
+      scrollable
+    >
       <Modal.Header closeButton>
-        <Modal.Title>Mua sản phẩm: {product.name}</Modal.Title>
+        <Modal.Title>Chi tiết sản phẩm</Modal.Title>
       </Modal.Header>
+
       <Modal.Body>
-        {success && (
-          <Alert variant="success">Thanh toán thành công! Đang chuyển hướng...</Alert>
-        )}
-        {error && <Alert variant="danger">{error}</Alert>}
-
-        <div className="row">
-          <div className="col-md-6">
-            <img
-              src={product.image}
-              alt={product.name}
-              className="img-fluid"
-            />
-            <p className="mt-2">{product.description}</p>
+        {loading ? (
+          <div className="text-center py-4">
+            <div className="spinner-border" role="status"></div>
+            <p className="mt-2">Đang tải thông tin sản phẩm...</p>
           </div>
-          <div className="col-md-6">
-            <Form.Group className="mb-3">
-              <Form.Label>Số lượng</Form.Label>
-              <Form.Control
-                type="number"
-                min="1"
-                max={product.quantity}
-                value={quantity}
-                onChange={(e) => setQuantity(parseInt(e.target.value) || 1)}
+        ) : error ? (
+          <div className="alert alert-danger">{error}</div>
+        ) : product ? (
+          <div className="row g-4">
+            {/* Hình ảnh */}
+            <div className="col-lg-6">
+              <img
+                src={product.image}
+                alt={product.name}
+                className="img-fluid rounded"
+                style={{ maxHeight: 300, objectFit: "contain" }}
               />
-              <Form.Text>Còn lại: {product.quantity}</Form.Text>
-            </Form.Group>
+            </div>
 
-            <Form.Group className="mb-3">
-              <Form.Label>Voucher</Form.Label>
-              <Form.Select
-                onChange={(e) => {
-                  const voucherId = e.target.value;
-                  const voucher = vouchers.find((v) => v.id == voucherId);
-                  if (voucher) handleApplyVoucher(voucher);
-                  else setSelectedVoucher(null);
-                }}
-              >
-                <option value="">Chọn voucher</option>
-                {vouchers.map((v) => (
-                  <option key={v.id} value={v.id}>
-                    {v.code} - Giảm {v.discount}₫
-                  </option>
-                ))}
-              </Form.Select>
-            </Form.Group>
+            {/* Thông tin */}
+            <div className="col-lg-6">
+              <h5 className="fw-bold">{product.name}</h5>
+              <div className="text-success fw-semibold mb-2">
+                Còn sẵn: {product.quantity ?? 0} sản phẩm
+              </div>
 
-            <h5>Tổng tiền: {totalPrice.toLocaleString("vi-VN")} ₫</h5>
+              <p className="text-danger fs-5 fw-bold">
+                {formatPrice(product.price)} đ
+              </p>
+
+
+
+              <SpecList specs={descriptionData} />
+              <div className="my-3">
+                <QuantityInput
+                  value={qty}
+                  min={1}
+                  max={product.quantity ?? 1}
+                  onChange={setQty}
+                />
+              </div>
+
+              <div className="mt-3 small text-muted">
+                Mã: HMT{String(product.id).padStart(2, "0")}
+              </div>
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="alert alert-warning">
+            Không tìm thấy sản phẩm với ID: {id}
+          </div>
+        )}
       </Modal.Body>
+
       <Modal.Footer>
-        <Button variant="secondary" onClick={handleCloseModal}>
-          Hủy
-        </Button>
-        <Button
-          variant="primary"
-          onClick={handleCheckout}
-          disabled={loading}
-        >
-          {loading ? <Spinner animation="border" size="sm" /> : "Thanh toán"}
-        </Button>
+        <Button text="MUA TÀI KHOẢN" onClick={handleBuy} />
       </Modal.Footer>
     </Modal>
   );
 };
 
-export default ModalPurchase;
+export default ModalPurchaseTypeProduct;

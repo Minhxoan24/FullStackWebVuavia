@@ -30,7 +30,7 @@ router = APIRouter(tags=["AccountVuavia"], prefix="/account-vuavia")
 async def create_account_vuavia(
     account_vuavia: CreateVuaviaSchema,
     db: AsyncSession = Depends(get_async_session),
-    admin_user: User = Depends(get_current_admin_user)  # Chỉ admin mới được thêm
+    # admin_user: User = Depends(get_current_admin_user)  # Chỉ admin mới được thêm
 ):
     """Thêm tài khoản mới vào kho tài khoản Vuavia"""
     return await CreateAccountVuaviaService(account_vuavia, db)

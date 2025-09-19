@@ -8,12 +8,12 @@ from app.schemas.InformationTypeProduct.InformationTypeProduct import Informatio
 async def GetInforTypeproductService(id: int, db: AsyncSession) -> InformationTypeProductBase:
     try:
         result = await db.execute(select(InforTypeProduct).where(InforTypeProduct.type_product_id == id))
-        info = result.scalar_one_or_none()
+        info = result.scalars().all()
         if not info:
             raise HTTPException(status_code=404, detail="Information type product not found")
         return InformationTypeProductBase(
-            describe=info.describe,
-            type_product_id=info.type_product_id
+            describe=info[0].describe,
+            type_product_id=info[0].type_product_id
         )
     except HTTPException as httpex:
         raise httpex

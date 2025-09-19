@@ -38,7 +38,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="C:\Users\Minh\Desktop\FullStackWebVuavia\backend\venv"
+VIRTUAL_ENV="C:\Users\Minh\Desktop\Projcet\WebVuavia\FullStackWebVuavia\backend\venv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"
