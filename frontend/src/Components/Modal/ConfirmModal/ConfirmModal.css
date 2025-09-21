@@ -1,0 +1,52 @@
+/* Làm nền modal xám nhẹ */
+.custom-backdrop {
+    background-color: #000 !important;
+    opacity: 0.18 !important;
+    /* xám rất nhẹ; tăng lên 0.25 nếu muốn đậm hơn */
+}
+
+/* Bo góc & đổ bóng nhẹ */
+.confirm-modal .modal-content {
+    border: none;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+/* Khối nội dung */
+.confirm-body {
+    padding: 28px 24px;
+}
+
+/* Icon tròn dấu chấm than */
+.warning-icon {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    border: 6px solid #ecd7bf;
+    /* viền be nhạt */
+    color: #e0b07a;
+    /* màu chữ be đậm */
+    display: grid;
+    place-items: center;
+    font-size: 52px;
+    line-height: 1;
+}
+
+/* Nút */
+.btn-primary {
+    background-color: #3d78c5;
+    border-color: #3d78c5;
+}
+
+.btn-primary:hover {
+    background-color: #3469ad;
+}
+
+.btn-danger {
+    background-color: #c9483d;
+    border-color: #c9483d;
+}
+
+.btn-danger:hover {
+    background-color: #b13e35;
+}

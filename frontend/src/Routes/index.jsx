@@ -61,6 +61,7 @@ const AppRoutes = () => {
                 <Route path={Path.PAGE_ACCOUNT} element={<PageAccount />} />
                 <Route path={Path.MY_VOUCHER} element={<MyVoucher />} />
                 <Route path={Path.DETAIL_TYPE_PRODUCT} element={<DetailTypeProduct />} />
+
             </Route>
 
         </Routes>

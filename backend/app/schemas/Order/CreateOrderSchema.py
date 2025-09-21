@@ -5,7 +5,9 @@ class CreateOrderSchema(BaseModel):
     """Schema cho order trực tiếp - KHÔNG cần giỏ hàng"""
     type_product_id: int
     quantity: int
-    voucher_id: Optional[int] = None  # ID của voucher (nếu có)
+    discount_amount: int = 0  # Thêm trường này, mặc định 0
+    # Comment voucher_id (tạm thời disable)
+    # voucher_id: Optional[int] = None  # ID của voucher (nếu có)
 
     class Config:
         from_attributes = True 
@@ -21,3 +23,5 @@ class CreateOrderSchema(BaseModel):
         if v <= 0:
             raise ValueError("Type product ID must be positive")
         return v
+    
+    

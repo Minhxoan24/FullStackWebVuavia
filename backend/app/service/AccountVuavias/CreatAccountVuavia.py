@@ -5,10 +5,9 @@ from app.models.AccountVuavia import AccountVuavia
 from app.schemas.AccountVuaviaSchema.CreateVuavia import CreateVuaviaSchema
 from app.schemas.Message.Message import MessageSchema
 from app.models.TypeProduct import TypeProduct  # Thêm import
-from passlib.context import CryptContext  # Thêm import cho hashing
+from app.Utils.HashPassword import hash_password 
 
-# Tạo context cho hashing (bcrypt)
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
 
 
 async def CreateAccountVuaviaService(account_vuavia: CreateVuaviaSchema, db: AsyncSession) -> MessageSchema:
@@ -26,8 +25,8 @@ async def CreateAccountVuaviaService(account_vuavia: CreateVuaviaSchema, db: Asy
             raise HTTPException(status_code=404, detail="Type product not found")
         
         # Hash password trước khi lưu
-        hashed_password = pwd_context.hash(account_vuavia.password)
-        
+        hashed_password = hash_password(account_vuavia.password)
+
         # Tạo account với password đã hash
         new_account = AccountVuavia(
             login_name=account_vuavia.login_name,
@@ -48,4 +47,6 @@ async def CreateAccountVuaviaService(account_vuavia: CreateVuaviaSchema, db: Asy
     except Exception as e:
         await db.rollback()
         raise HTTPException(status_code=500, detail=str(e))
+    if len(accounts) < new_order.quantity:
+        raise HTTPException(status_code=400, detail="Not enough products in stock")
 

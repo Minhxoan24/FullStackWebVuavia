@@ -5,6 +5,7 @@ from sqlalchemy.orm import joinedload
 from app.models.Category import Category
 from app.schemas.CategorySchema.ListCateAndTypeproduct import ListTypeProductSchema 
 from app.schemas.TypeProductSchema.InforTypeProductSchema import InforTypeProductSchema
+from app.service.AccountVuavias.CountAccount import CountAccountVuaviaService 
 import json
 
 async def Detail_List_TypeProduct(db: AsyncSession) -> list[ListTypeProductSchema]:
@@ -43,7 +44,7 @@ async def Detail_List_TypeProduct(db: AsyncSession) -> list[ListTypeProductSchem
                     price=float(tp.price),
                     image=tp.image or "",
                     category_id=tp.category_id,
-                    quantity=None  # Có thể tính quantity từ AccountVuavia nếu cần
+                    quantity=await CountAccountVuaviaService(tp.id, db)
                 )
                 type_products_list.append(type_product_obj)
             

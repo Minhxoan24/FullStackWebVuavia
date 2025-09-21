@@ -30,7 +30,7 @@ const changePassword = async (data) => {
 };
 
 
-const TransactionHistory = async () => {
+const GetTransactionHistory = async () => {
     try {
         const res = await apiClient.get("/transaction-history/my-transactions");
         return res.data;
@@ -50,16 +50,16 @@ const getMyVoucher = async () => {
 };
 const getMyOrder = async () => {
     try {
-        const res = await apiClient.get("/order/my-orders");
+        const res = await apiClient.get("/orders/my-orders");
         return res.data;
     } catch (error) {
         console.error("Error fetching my orders:", error);
         throw error;
     }
 };
-const getMyOrderDetail = async (orderId) => {
+const getMyOrderDetail = async (order_detail_Id) => {
     try {
-        const res = await apiClient.get(`/order/orderDetail/${orderId}`);
+        const res = await apiClient.get(`/orders/order/orderDetail/${order_detail_Id}`);
         return res.data;
     } catch (error) {
         console.error("Error fetching my order details:", error);
@@ -69,4 +69,4 @@ const getMyOrderDetail = async (orderId) => {
 
 
 
-export { getProfile, updateProfile, changePassword, TransactionHistory, getMyVoucher, getMyOrder, getMyOrderDetail };
+export { getProfile, updateProfile, changePassword, GetTransactionHistory, getMyVoucher, getMyOrder, getMyOrderDetail };

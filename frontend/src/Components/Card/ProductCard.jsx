@@ -41,7 +41,7 @@ const ProductCard = ({ product }) => {
     const formatPrice = (n) =>
         (Number(n) || 0).toLocaleString("vi-VN", { maximumFractionDigits: 0 });
 
-    const isOutOfStock = (product?.quantity ?? 0) <= 0;
+
 
     return (
         <>
@@ -67,9 +67,9 @@ const ProductCard = ({ product }) => {
                         {product?.name ?? "Sản phẩm"}
                     </h5>
 
-                    {/* <p className="text-success small mb-2">
+                    <p className="text-success small mb-2">
                         Còn sẵn: <b>{product?.quantity ?? 0}</b> sản phẩm
-                    </p> */}
+                    </p>
 
                     {/* Giá */}
                     <div className="mb-3">
@@ -94,9 +94,9 @@ const ProductCard = ({ product }) => {
 
                     {/* Button Mua — chặn bubble để không điều hướng */}
                     <Button
-                        text={isOutOfStock ? "HẾT HÀNG" : "MUA TÀI KHOẢN"}
+                        text={"MUA TÀI KHOẢN"}
                         onClick={handleBuyClick}
-                        disabled={isOutOfStock}
+
                     />
                 </div>
             </div>

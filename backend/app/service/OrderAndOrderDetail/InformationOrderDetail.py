@@ -2,6 +2,7 @@ from fastapi import HTTPException
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
+import os
 from app.models.OrderDetail import OrderDetail
 from app.models.Orders import Order
 from app.models.Users import User
@@ -37,13 +38,22 @@ async def InformationOrderDetailService(
                 detail="Order detail not found or you don't have permission to access it"
             )
 
+        # Process accounts_info (no decryption needed)
+        accounts_info = []
+        for account in order_detail.accounts_info:
+            accounts_info.append({
+                "id": account["id"],
+                "login_name": account["login_name"],
+                "password": account["password"]  # Trả về plain text
+            })
+
         return ResponseOrderDetailSchema(
             id=order_detail.id,
             time=order_detail.order.time,
             quantity=order_detail.quantity,
             total_amount=order_detail.total_amount,
             type_product_id=order_detail.type_product_id,
-            accounts_info=order_detail.accounts_info
+            accounts_info=accounts_info
         )
 
     except HTTPException as http_ex:
@@ -51,7 +61,7 @@ async def InformationOrderDetailService(
     except Exception as e:
         await db.rollback()
         raise HTTPException(status_code=500, detail=f"Error fetching order detail: {str(e)}")
-    
+
 
 
 

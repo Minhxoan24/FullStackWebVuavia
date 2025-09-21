@@ -42,7 +42,7 @@ const PageAccount = () => {
                 <Col md={3}>
                     <div className="shadow-sm p-3 text-center">
                         <img
-                            src={user.avatar || "https://via.placeholder.com/100"}
+                            src={user.avatar || "https://res.cloudinary.com/dkwvlimht/image/upload/v1758401193/bc439871417621836a0eeea768d60944_fvui3e.jpg"}
                             alt="Avatar"
                             className="rounded-circle"
                             style={{ width: "100px", height: "100px" }}

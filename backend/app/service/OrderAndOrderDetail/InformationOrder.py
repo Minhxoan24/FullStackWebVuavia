@@ -14,7 +14,7 @@ async def InformationOrderService(db: AsyncSession, user: User) -> list[OrderRes
             select(Order)
             .options(
                 selectinload(Order.order_detail),
-                selectinload(Order.voucher)
+                selectinload(Order.voucher_usage)
             )
             .where(Order.user_id == user.id)
             .order_by(Order.time.desc())

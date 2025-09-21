@@ -1,0 +1,80 @@
+/* src/Pages/OrderDetail/OrderDetail.css */
+
+.order-detail-page .card {
+    border-radius: 14px;
+}
+
+.order-header .card-body {
+    padding: 16px 20px;
+}
+
+.order-header .small {
+    font-size: 0.875rem;
+}
+
+.fs-7 {
+    font-size: 0.85rem;
+}
+
+.summary .card-title,
+.accounts .card-header h5,
+.billing .card-header h5 {
+    font-size: 1.1rem;
+}
+
+.table thead th {
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+.table tfoot th {
+    font-weight: 600;
+}
+
+.text-success {
+    color: #198754 !important;
+}
+
+/* Nút đỏ như ảnh mẫu */
+.btn-danger.btn-copy,
+.btn-danger.btn-copy-all {
+    background-color: #d7362f;
+    border-color: #d7362f;
+    padding: 8px 14px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    border-radius: 10px;
+}
+
+.btn-danger.btn-copy-all {
+    padding: 9px 16px;
+}
+
+/* Dòng thông tin đăng nhập dùng font mono để dễ nhìn */
+.login-cell .mono {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
+    word-break: break-all;
+}
+
+/* Bảng tài khoản viền rõ như ảnh */
+.accounts .table-bordered> :not(caption)>*>* {
+    border-width: 1px;
+}
+
+/* Tinh chỉnh khoảng cách */
+.order-detail-page .card-header,
+.order-detail-page .card-body {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+/* Responsive: co hàng nút copy về dưới trên màn nhỏ */
+@media (max-width: 575.98px) {
+    .accounts .card-header {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 10px;
+    }
+}

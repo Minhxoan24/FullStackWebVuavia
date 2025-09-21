@@ -60,8 +60,20 @@ export const AuthProvider = ({ children }) => {
     setToken(null); setUser(null);
   };
 
+  // Thêm hàm refreshUser để cập nhật user sau mua
+  const refreshUser = async () => {
+    if (token) {
+      try {
+        const updatedUser = await getProfile();
+        setUser(updatedUser);
+      } catch (error) {
+        console.error("Error refreshing user:", error);
+      }
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, token, loading, login, register, logout }}>
+    <AuthContext.Provider value={{ user, token, loading, login, register, logout, refreshUser }}>
       {children}
     </AuthContext.Provider>
   );

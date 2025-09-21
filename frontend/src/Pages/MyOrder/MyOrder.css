@@ -1,0 +1,20 @@
+.order-table-wrapper {
+  border-top: 1px solid #eee;
+}
+
+.order-table thead th {
+  letter-spacing: .3px;
+}
+
+.order-table tbody tr {
+  border-color: #eee;
+}
+
+.btn-view {
+  background-color: #ea6a28;   /* cam giống ảnh */
+  border-color: #ea6a28;
+}
+.btn-view:hover {
+  background-color: #d65f23;
+  border-color: #d65f23;
+}

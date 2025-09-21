@@ -1,12 +1,14 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List, Dict
+from datetime import datetime
+
 class ResponseOrderDetailSchema(BaseModel):
-    time: str
+    id: int
+    time: datetime
     quantity: int
-    total_amount: int
+    total_amount: float
     type_product_id: int
-    total_amount: int
-    accounts_info: Optional[dict] = None
+    accounts_info: List[Dict]
 
     class Config:
         from_attributes = True

@@ -13,9 +13,10 @@ class Order(Base):
     __tablename__ = "orders"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    time = Column(DateTime, nullable=False, default=lambda: datetime.now(timezone.utc))
+    time = Column(DateTime, nullable=False, default=lambda: datetime.now(timezone.utc).replace(tzinfo=None))
     quantity = Column(Integer, nullable=False)
     total_amount = Column(Float, nullable=False)
+    status = Column(SAEnum(OrderStatus), nullable=False, default=OrderStatus.PENDING)
     
     # Foreign Keys - CẬP NHẬT CASCADE BEHAVIOR
     user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)

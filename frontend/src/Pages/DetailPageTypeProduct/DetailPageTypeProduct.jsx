@@ -1,15 +1,17 @@
 // src/Pages/TypeProductDetail/TypeProductDetail.jsx
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 
+import ConfirmPurchaseModal from "../../Components/Modal/ConfirmModal/ConfirmModal.js";
 import SpecList from "../../Components/Product/SpecList";
 import QuantityInput from "../../Components/Product/QuantityInput";
 import Button from "../../Components/Buttons/ButtonBuy";
 import { getTypeProductById, getinfortypeproduct } from "../../Services/ApiTypeProduct";
 import CreateOrder from "../../Services/OrderService";
+import { AuthContext } from '../../Context/AuthContext';
 
-const TypeProductDetail = () => {
+const DetailPageTypeProduct = () => {  // Thay đổi tên component để khớp với file
     const { id } = useParams();
 
     const [product, setProduct] = useState(null);
@@ -18,6 +20,10 @@ const TypeProductDetail = () => {
     const [activeTab, setActiveTab] = useState("desc");
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [showModal, setShowModal] = useState(false);
+    const handleShowConfirm = () => setShowModal(true);
+    const handleCloseConfirm = () => setShowModal(false);
+    const { refreshUser } = React.useContext(AuthContext);
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -98,7 +104,7 @@ const TypeProductDetail = () => {
         );
     }
 
-    // SỬAẠ: Xử lý description từ API response (string JSON)
+    // SỬA: Xử lý description từ API response (string JSON)
     let descriptionData = {};
     if (product?.description) {
         try {
@@ -121,20 +127,35 @@ const TypeProductDetail = () => {
     };
 
     // Hàm xử lý mua hàng
-    const handleBuy = async (e) => {
-        e.preventDefault();
-        const orderData = {
+    const handleBuy = () => {
+        handleShowConfirm();
+    };
+
+    const handleConfirmBuy = async () => {
+        if (!product) {
+            alert("Sản phẩm chưa được tải. Vui lòng thử lại.");
+            return;
+        }
+
+        const orderdata = {  // Di chuyển vào đây để tránh lỗi null
             type_product_id: product.id,
             quantity: qty,
-        }
-        console.log("Order data:", orderData);
+            discount_amount: 0
+        };
+
         try {
-            const result = await CreateOrder(orderData);
+            const result = await CreateOrder(orderdata);
             console.log("Order created successfully:", result);
+            alert("Đơn hàng đã được tạo thành công!");
+            handleCloseConfirm();  // Đóng modal sau thành công
+            refreshUser(); // Cập nhật thông tin người dùng sau khi tạo đơn hàng
+            // Có thể thêm: setQty(1); hoặc redirect
         } catch (error) {
             console.error("Error creating order:", error);
+            alert("Đã xảy ra lỗi khi tạo đơn hàng. Vui lòng thử lại.");
         }
     };
+
 
     return (
         <div className="container py-4">
@@ -176,15 +197,16 @@ const TypeProductDetail = () => {
 
                     {/* Thông số kỹ thuật từ product.description */}
                     <SpecList specs={descriptionData} />
+
+
                     {/* Số lượng + mua */}
-                    <div className="d-flex align-items-center gap-3 my-3">
+                    <div className="my-3">
                         <QuantityInput
                             value={qty}
                             min={1}
                             max={product.quantity ?? 1}
                             onChange={setQty}
                         />
-
                     </div>
 
 
@@ -195,6 +217,11 @@ const TypeProductDetail = () => {
                     <Button text="MUA TÀI KHOẢN" onClick={handleBuy} />
                 </div>
             </div>
+            <ConfirmPurchaseModal
+                show={showModal}
+                onConfirm={handleConfirmBuy}
+                onClose={handleCloseConfirm}
+            />
 
             {/* ===== HỘP MÔ TẢ Ở DƯỚI CHI TIẾT ===== */}
             <div className="mt-5">
@@ -282,4 +309,4 @@ const TypeProductDetail = () => {
     );
 }
 
-export default TypeProductDetail;
+export default DetailPageTypeProduct;  // Cập nhật export

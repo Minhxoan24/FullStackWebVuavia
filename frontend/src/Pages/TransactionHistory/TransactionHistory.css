@@ -1,0 +1,52 @@
+/* Thanh tiêu đề màu cam như ảnh */
+.history-title {
+    background: #ea6a28;
+    color: #fff;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+/* Bảng & đường kẻ nhẹ */
+.tx-table-wrapper {
+    border-top: 1px solid #eee;
+}
+
+.tx-table thead th {
+    border-bottom: 1px solid #e9ecef;
+    letter-spacing: .2px;
+}
+
+.tx-table tbody tr {
+    border-color: #eee;
+}
+
+/* Màu số tiền */
+.amount-positive {
+    color: #2eaf3b;
+}
+
+/* xanh */
+.amount-negative {
+    color: #d9534f;
+}
+
+/* đỏ */
+
+/* Link đơn hàng */
+.tx-link {
+    color: #FF6801;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.tx-link:hover {
+    text-decoration: underline;
+}
+
+/* Giới hạn mô tả dài 1 dòng (tùy thích) */
+.tx-desc {
+    max-width: 520px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
