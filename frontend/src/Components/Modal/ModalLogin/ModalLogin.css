@@ -1,168 +1,220 @@
-/* Modal Backdrop */
+/* BACKDROP & DIALOG */
 .modal-backdrop-custom {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.6);
+    inset: 0;
     z-index: 1050;
     display: flex;
     align-items: center;
     justify-content: center;
-    animation: fadeIn 0.3s ease-in-out;
+    background: rgba(0, 0, 0, .45);
 }
 
-/* Left Side Gradient */
-.modal-left-gradient {
-    background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 25%, #45b7d1 50%, #96ceb4 75%, #feca57 100%);
-    min-height: 500px;
-    position: relative;
+.modal-dialog {
+    width: 100%;
+    max-width: 920px;
+    margin: 1rem;
 }
 
-.modal-left-gradient::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, rgba(255, 107, 107, 0.8) 0%, rgba(78, 205, 196, 0.8) 100%);
+.custom-modal {
+    border: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #fff;
 }
 
-.modal-left-gradient>div {
-    position: relative;
-    z-index: 2;
+/* LEFT PANE */
+.left-pane {
+    min-height: 440px;
+    padding: 48px 32px;
+    background: linear-gradient(135deg, #b2433d 0%, #2d56a7 100%);
 }
 
-/* Form Styling */
-.login-form-container {
-    max-width: 400px;
-    margin: 0 auto;
-    padding-top: 1rem;
+.left-title {
+    color: #fff;
+    font-weight: 800;
+    text-transform: uppercase;
+    margin-bottom: 8px;
 }
 
-.form-control-lg {
-    padding: 15px 20px;
-    font-size: 16px;
-    transition: all 0.3s ease;
+.left-sub {
+    color: #e9eefc;
+    margin-bottom: 18px;
+}
+
+.btn-left-outline {
+    background: transparent;
+    color: #fff;
+    border: 1.5px solid rgba(255, 255, 255, .75);
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-weight: 700;
+}
+
+.btn-left-outline:hover {
+    background: rgba(255, 255, 255, .1);
+}
+
+/* RIGHT PANE */
+.right-pane {
+    background: #fff;
+}
+
+.close-white {
+    filter: invert(1);
+    opacity: .7;
+}
+
+.close-white:hover {
+    opacity: 1;
+    transform: scale(1.06);
+}
+
+.right-inner {
+    padding: 32px 28px;
+    max-width: 460px;
+    margin-left: 12px;
+}
+
+.right-title {
+    font-weight: 800;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    color: #2a2a2a;
+}
+
+/* Input */
+.input-soft {
+    background: #eaf0ff;
+    border: 1px solid #d1d7e6;
+    border-radius: 8px;
+    padding: 10px 12px;
+    outline: none;
     box-shadow: none;
 }
 
-.form-control-lg:focus {
-    background-color: #fff !important;
-    border: 2px solid #ff6b35;
-    box-shadow: 0 0 0 0.2rem rgba(255, 107, 53, 0.25);
+.input-soft:focus {
+    background: #fff;
+    border-color: #ff844d;
+    box-shadow: 0 0 0 .15rem rgba(255, 132, 77, .2);
 }
 
-/* Button Styling */
-.btn-outline-light {
-    transition: all 0.3s ease;
+/* Password eye toggle */
+.pw-toggle {
+    position: absolute;
+    right: .5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: .25rem;
+    color: #6b7280;
+    text-decoration: none;
 }
 
-.btn-outline-light:hover {
-    background: white !important;
-    color: #ff6b35 !important;
-    border-color: white !important;
-    transform: translateY(-2px);
+.pw-toggle:hover {
+    color: #111827;
 }
 
-.btn:hover {
-    transform: translateY(-1px);
-    transition: all 0.3s ease;
+/* Button login */
+.btn-login-outline {
+    border: 1.6px solid #f0743e;
+    color: #f0743e;
+    font-weight: 800;
+    text-transform: uppercase;
+    padding: 10px 16px;
+    border-radius: 8px;
+    background: #fff;
+    transition: .15s ease;
 }
 
-/* Social Login Buttons */
-.btn-primary:hover,
-.btn-danger:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+.btn-login-outline:hover {
+    background: #f0743e;
+    color: #fff;
+    box-shadow: 0 6px 18px rgba(240, 116, 62, .28);
 }
 
-/* Close Button */
-.btn-close {
-    font-size: 1.2rem;
-    opacity: 0.6;
-    transition: all 0.3s ease;
+.btn-login-outline:disabled {
+    opacity: .75;
 }
 
-.btn-close:hover {
-    opacity: 1;
-    transform: scale(1.1);
+/* Link forgot */
+.link-forgot {
+    color: #6b7280;
+    text-decoration: none;
 }
 
-/* Checkbox Styling */
+.link-forgot:hover {
+    color: #f0743e;
+    text-decoration: underline;
+}
+
+/* Checkbox */
 .form-check-input:checked {
-    background-color: #ff6b35;
-    border-color: #ff6b35;
+    background-color: #f0743e;
+    border-color: #f0743e;
 }
 
 .form-check-input:focus {
-    border-color: #ff6b35;
-    box-shadow: 0 0 0 0.25rem rgba(255, 107, 53, 0.25);
+    border-color: #f0743e;
+    box-shadow: 0 0 0 .15rem rgba(240, 116, 62, .25);
 }
 
-/* Link Styling */
-a.text-muted:hover {
-    color: #ff6b35 !important;
-    text-decoration: underline !important;
+/* SOCIAL BAR */
+.social-bar {
+    background: #efefef;
+    padding: 14px 18px;
+    border-top: 1px solid #e5e5e5;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    .modal-lg {
-        max-width: calc(100% - 2rem);
-        margin: 1rem auto;
-    }
-
-    .modal-left-gradient {
-        min-height: 200px;
-    }
-
-    .modal-left-gradient h2 {
-        font-size: 1.5rem;
-    }
-
-    .login-form-container {
-        padding: 1rem;
-    }
-
-    .col-6 .btn {
-        font-size: 12px;
-        padding: 8px 12px;
-    }
-
-    .btn .me-2 {
-        margin-right: 0.25rem !important;
-    }
+.social-wrap {
+    max-width: 760px;
+    margin: 0 auto;
 }
 
-/* Animation */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: scale(0.9);
-    }
-
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
+.social {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border-radius: 999px;
+    padding: 10px 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    border: none;
+    color: #fff;
 }
 
-/* Modal Dialog Animation */
-.modal-dialog {
-    animation: slideUp 0.3s ease-in-out;
+.social-fb {
+    background: #3b5998;
 }
 
-@keyframes slideUp {
-    from {
-        opacity: 0;
-        transform: translateY(50px);
+.social-fb:hover {
+    background: #324b82;
+}
+
+.social-gg {
+    background: #db4437;
+}
+
+.social-gg:hover {
+    background: #b8352a;
+}
+
+.social i {
+    font-size: 16px;
+}
+
+/* Responsive */
+@media (max-width:768px) {
+    .left-pane {
+        min-height: 220px;
     }
 
-    to {
-        opacity: 1;
-        transform: translateY(0);
+    .right-inner {
+        max-width: 100%;
+        margin-left: 0;
+        padding: 24px;
+    }
+
+    .social-wrap {
+        justify-content: center;
     }
 }

@@ -1,204 +1,262 @@
-import React, { useState, useContext } from "react";
-import { AuthContext } from "../../../Context/AuthContext"; // đường dẫn tuỳ vị trí file
-import './ModalLogin.css';
+import React, { useEffect, useRef, useState, useContext, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../../Context/AuthContext";
+import "./ModalLogin.css";
 
-import { useNavigate } from 'react-router-dom';
 const ModalLogin = ({ show, handleClose }) => {
     const { login } = useContext(AuthContext);
-    const [formModalLogin, setFormModalLogin] = useState({
-        accountname: "",
-        password: "",
-    });
-
-
-
-
-
     const navigate = useNavigate();
-    // if show = True thì !show = false mà false thì bỏ qua . nếu show = false thì !show = true . điều kiện đúng trả về null 
-    if (!show) return null;
 
+    const [form, setForm] = useState({
+        accountname: localStorage.getItem("remember_accountname") || "",
+        password: "",
+        remember: !!localStorage.getItem("remember_accountname"),
+    });
+    const [submitting, setSubmitting] = useState(false);
+    const [errMsg, setErrMsg] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
+
+    const dialogRef = useRef(null);
+    const firstFieldRef = useRef(null);
+
+    useEffect(() => {
+        if (!show) return;
+        const prevOverflow = document.body.style.overflow;
+        document.body.style.overflow = "hidden";
+        firstFieldRef.current?.focus();
+
+        const onKey = (e) => {
+            if (e.key === "Escape") handleClose();
+            if (e.key === "Tab" && dialogRef.current) {
+                const focusables = dialogRef.current.querySelectorAll(
+                    'a[href],button:not([disabled]),textarea,input,select,[tabindex]:not([tabindex="-1"])'
+                );
+                if (!focusables.length) return;
+                const first = focusables[0];
+                const last = focusables[focusables.length - 1];
+                if (e.shiftKey && document.activeElement === first) {
+                    e.preventDefault(); last.focus();
+                } else if (!e.shiftKey && document.activeElement === last) {
+                    e.preventDefault(); first.focus();
+                }
+            }
+        };
+        document.addEventListener("keydown", onKey);
+        return () => {
+            document.body.style.overflow = prevOverflow;
+            document.removeEventListener("keydown", onKey);
+        };
+    }, [show, handleClose]);
+
+    const onBackdropClick = (e) => {
+        if (e.target === e.currentTarget) handleClose();
+    };
+
+    const onChange = (e) => {
+        const { name, value, type, checked } = e.target;
+        setForm((s) => ({ ...s, [name]: type === "checkbox" ? checked : value }));
+        setErrMsg("");
+    };
+
+    const rememberAccountname = useCallback((remember, accountname) => {
+        if (remember && accountname) localStorage.setItem("remember_accountname", accountname);
+        else localStorage.removeItem("remember_accountname");
+    }, []);
 
     const handleRegisterClick = () => {
-        handleClose(); // đóng modal
-        navigate('/register'); // chuyển sang trang đăng ký
+        handleClose();
+        navigate("/register");
     };
 
-    const handleBackdropClick = (e) => {
-        if (e.target === e.currentTarget) {
-            handleClose();
-        }
-    };
-    const handleSubmitLogin = async (e) => {
-        e.preventDefault(); // Ngăn chặn hành vi mặc định của form (tải lại trang)
-        // Gọi API đăng nhập ở đây
-        if (!formModalLogin.accountname || !formModalLogin.password) {
-            alert("Vui lòng nhập đầy đủ thông tin");
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setErrMsg("");
+        if (!form.accountname?.trim() || !form.password) {
+            setErrMsg("Vui lòng nhập đầy đủ thông tin.");
             return;
         }
+        setSubmitting(true);
         try {
-            const data = await login(formModalLogin);
-            alert("Login successful!");
-            console.log("Login data:", data);
-            setFormModalLogin({
-                accountname: "",
-                password: "",
-            });
-            handleClose(); // Đóng modal sau khi đăng nhập thành công
-            navigate('/'); // Chuyển hướng sang trang chủ (hoặc trang bạn muốn)
+            await login({ accountname: form.accountname.trim(), password: form.password });
+            rememberAccountname(form.remember, form.accountname.trim());
+            setForm((s) => ({ ...s, password: "" }));
+            handleClose();
+            navigate("/");
         } catch (error) {
-            console.error("Login failed:", error);
-            alert("Login failed:" + (error.response?.data?.message || error.message));
+            const msg = error?.response?.data?.message || error?.message || "Đăng nhập thất bại.";
+            setErrMsg(msg);
+        } finally {
+            setSubmitting(false);
         }
     };
 
-
+    if (!show) return null;
 
     return (
-        <>
-            {/* Modal Backdrop */}
-            <div className="modal-backdrop-custom" onClick={handleBackdropClick}>{/* Modal Backdrop sử dụng để làm mờ phần còn lại của trang */}
-                <div className="modal-dialog modal-lg modal-dialog-centered"> {/* Modal dialog phần hộp thoại chính bên trong modal để bao bọc content   modal-lg : size modal  */}
-                    <div className="modal-content border-0 rounded-4 overflow-hidden shadow-lg">
-                        <div className="modal-body p-0">
-                            <div className="row g-0">
-                                {/* Left Side - Gradient */}
-                                <div className="col-md-5 modal-left-gradient d-flex flex-column justify-content-center align-items-center text-white p-5">
-                                    <div className="text-center">
-                                        <h2 className="fw-bold mb-3 display-6">ĐĂNG KÝ</h2>
-                                        <p className="mb-4 fs-6">Bạn chưa có tài khoản, đăng ký ngay!</p>
-                                        <button className="btn btn-outline-light btn-lg px-4 py-2 rounded-2 fw-semibold border-2" onClick={handleRegisterClick}>
-                                            ĐĂNG KÝ TÀI KHOẢN MỚI
-                                        </button>
-                                    </div>
-                                </div>
-
-                                {/* Right Side - Login Form */}
-                                <div className="col-md-7 bg-white p-5 position-relative">
-                                    {/* Close Button */}
+        <div className="modal-backdrop-custom" onClick={onBackdropClick}>
+            <div
+                className="modal-dialog modal-lg modal-dialog-centered"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="loginTitle"
+                ref={dialogRef}
+            >
+                <div className="modal-content custom-modal">
+                    <div className="modal-body p-0">
+                        <div className="row g-0">
+                            {/* LEFT SIDE */}
+                            <div className="col-md-6 left-pane d-flex flex-column justify-content-center align-items-center text-white">
+                                <div className="left-inner text-center">
+                                    <h2 className="left-title">ĐĂNG KÍ</h2>
+                                    <p className="left-sub">Bạn chưa có tài khoản, đăng kí ngay!</p>
                                     <button
                                         type="button"
-                                        className="btn-close position-absolute top-0 end-0 m-3"
-                                        onClick={handleClose}
-                                    ></button>
-
-                                    <div className="login-form-container">
-                                        <h3 className="fw-bold mb-4 text-dark">ĐĂNG NHẬP</h3>
-
-                                        <form onSubmit={handleSubmitLogin}>
-                                            {/* Username/Email Input */}
-                                            <div className="mb-3">
-                                                <label className="form-label fw-semibold text-dark mb-2">
-                                                    Tên tài khoản *
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    className="form-control form-control-lg bg-light border-0 rounded-3 px-3"
-                                                    placeholder="Nhập tên tài khoản !"
-
-                                                    style={{ backgroundColor: '#f8f9fa' }}
-                                                    name="accountname"
-                                                    autoComplete="accountname"
-                                                    value={formModalLogin.accountname}
-                                                    onChange={(e) => setFormModalLogin({ ...formModalLogin, accountname: e.target.value })}
-                                                />
-                                            </div>
-
-                                            {/* Password Input */}
-                                            <div className="mb-3">
-                                                <label className="form-label fw-semibold text-dark mb-2">
-                                                    Mật khẩu *
-                                                </label>
-                                                <input
-                                                    type="password"
-                                                    className="form-control form-control-lg bg-light border-0 rounded-3 px-3"
-                                                    placeholder="••••••••"
-                                                    style={{ backgroundColor: '#f8f9fa' }}
-                                                    name="password"
-                                                    autoComplete="current-password"
-                                                    value={formModalLogin.password}
-                                                    onChange={(e) => setFormModalLogin({ ...formModalLogin, password: e.target.value })}
-                                                />
-                                            </div>
-
-                                            {/* Remember Password Checkbox */}
-                                            <div className="form-check mb-3">
-                                                <input
-                                                    className="form-check-input"
-                                                    type="checkbox"
-                                                    id="rememberPassword"
-                                                />
-                                                <label className="form-check-label text-dark" htmlFor="rememberPassword">
-                                                    Ghi nhớ mật khẩu
-                                                </label>
-                                            </div>
-
-                                            {/* Login Button */}
-                                            <button
-                                                type="submit"
-                                                className="btn btn-warning btn-lg w-100 fw-bold rounded-3 mb-3 text-white"
-
-                                                style={{
-                                                    backgroundColor: '#ff6b35',
-                                                    borderColor: '#ff6b35',
-                                                    padding: '12px'
-
-                                                }}
-                                            >
-                                                ĐĂNG NHẬP
-                                            </button>
-
-                                            {/* Forgot Password Link */}
-                                            <div className="text-center mb-4">
-                                                <a href="/forgot-password" className="text-decoration-none text-muted">
-                                                    Quên mật khẩu?
-                                                </a>
-                                            </div>
-                                        </form>
-                                    </div>
+                                        className="btn btn-left-outline"
+                                        onClick={handleRegisterClick}
+                                    >
+                                        ĐĂNG KÍ TÀI KHOẢN MỚI
+                                    </button>
                                 </div>
                             </div>
-                        </div>
 
-                        {/* Social Login Footer */}
-                        <div className="modal-footer bg-white border-0 pt-0 pb-4">
-                            <div className="container-fluid">
-                                <div className="row g-2">
-                                    <div className="col-6">
+                            {/* RIGHT SIDE */}
+                            <div className="col-md-6 right-pane position-relative">
+                                <button
+                                    type="button"
+                                    className="btn-close position-absolute top-0 end-0 m-3 close-white"
+                                    onClick={handleClose}
+                                    aria-label="Đóng"
+                                />
+                                <div className="right-inner">
+                                    <h3 className="right-title" id="loginTitle">ĐĂNG NHẬP</h3>
+
+                                    {errMsg && <div className="alert alert-danger py-2">{errMsg}</div>}
+
+                                    <form onSubmit={handleSubmit} noValidate>
+                                        {/* Username or email */}
+                                        <div className="mb-3">
+                                            <label className="form-label fw-semibold text-dark mb-2" htmlFor="accountname">
+                                                Tên tài khoản hoặc địa chỉ email *
+                                            </label>
+                                            <input
+                                                id="accountname"
+                                                name="accountname"
+                                                type="text"
+                                                className="form-control input-soft"
+                                                placeholder="Nhập tên tài khoản"
+                                                autoComplete="username"
+                                                value={form.accountname}
+                                                onChange={onChange}
+                                                ref={firstFieldRef}
+                                                required
+                                            />
+                                        </div>
+
+                                        {/* Password + Eye */}
+                                        <div className="mb-3">
+                                            <label className="form-label fw-semibold text-dark mb-2" htmlFor="password">
+                                                Mật khẩu *
+                                            </label>
+                                            <div className="position-relative">
+                                                <input
+                                                    id="password"
+                                                    name="password"
+                                                    type={showPassword ? "text" : "password"}
+                                                    className="form-control input-soft pe-5"
+                                                    placeholder="••••••••"
+                                                    autoComplete="current-password"
+                                                    value={form.password}
+                                                    onChange={onChange}
+                                                    required
+                                                />
+                                                <button
+                                                    type="button"
+                                                    className="btn btn-sm btn-link pw-toggle"
+                                                    aria-label={showPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
+                                                    title={showPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
+                                                    onClick={() => setShowPassword(s => !s)}
+                                                >
+                                                    {showPassword ? (
+                                                        // Eye-off icon
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                            viewBox="0 0 24 24" fill="none">
+                                                            <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"
+                                                                stroke="currentColor" strokeWidth="2" />
+                                                            <path d="M14.12 9.88a3 3 0 1 1-4.24 4.24"
+                                                                stroke="currentColor" strokeWidth="2" />
+                                                            <path d="M3 3l18 18" stroke="currentColor" strokeWidth="2" />
+                                                        </svg>
+                                                    ) : (
+                                                        // Eye icon
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                            viewBox="0 0 24 24" fill="none">
+                                                            <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"
+                                                                stroke="currentColor" strokeWidth="2" />
+                                                            <circle cx="12" cy="12" r="3"
+                                                                stroke="currentColor" strokeWidth="2" />
+                                                        </svg>
+                                                    )}
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        {/* Remember */}
+                                        <div className="form-check mb-3">
+                                            <input
+                                                className="form-check-input"
+                                                type="checkbox"
+                                                id="remember"
+                                                name="remember"
+                                                checked={form.remember}
+                                                onChange={onChange}
+                                            />
+                                            <label className="form-check-label text-dark" htmlFor="remember">
+                                                Ghi nhớ mật khẩu
+                                            </label>
+                                        </div>
+
+                                        {/* Submit */}
                                         <button
-                                            type="button"
-                                            className="btn btn-primary w-100 fw-semibold rounded-pill d-flex align-items-center justify-content-center"
-                                            style={{
-                                                backgroundColor: '#4267B2',
-                                                borderColor: '#4267B2',
-                                                padding: '10px 15px'
-                                            }}
+                                            type="submit"
+                                            className="btn btn-login-outline w-100"
+                                            disabled={submitting}
                                         >
-                                            <i className="fab fa-facebook-f me-2"></i>
-                                            ĐĂNG NHẬP BẰNG FACEBOOK
+                                            {submitting ? "ĐANG ĐĂNG NHẬP..." : "ĐĂNG NHẬP"}
                                         </button>
-                                    </div>
-                                    <div className="col-6">
-                                        <button
-                                            type="button"
-                                            className="btn btn-danger w-100 fw-semibold rounded-pill d-flex align-items-center justify-content-center"
-                                            style={{
-                                                backgroundColor: '#db4437',
-                                                borderColor: '#db4437',
-                                                padding: '10px 15px'
-                                            }}
-                                        >
-                                            <i className="fab fa-google me-2"></i>
-                                            ĐĂNG NHẬP BẰNG GOOGLE
-                                        </button>
-                                    </div>
+
+                                        {/* Forgot */}
+                                        <div className="text-start mt-3">
+                                            <a href="/forgot-password" className="link-forgot">
+                                                Quên mật khẩu?
+                                            </a>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+                    {/* SOCIAL BAR */}
+                    <div className="social-bar">
+                        <div className="row g-2 social-wrap">
+                            <div className="col-md-6">
+                                <button type="button" className="btn social social-fb w-100">
+                                    <i className="fab fa-facebook-f me-2"></i>
+                                    <span className="social-text">ĐĂNG NHẬP BẰNG FACEBOOK</span>
+                                </button>
+                            </div>
+                            <div className="col-md-6">
+                                <button type="button" className="btn social social-gg w-100">
+                                    <i className="fab fa-google me-2"></i>
+                                    <span className="social-text">ĐĂNG NHẬP BẰNG GOOGLE</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
-        </>
+        </div>
     );
 };
 

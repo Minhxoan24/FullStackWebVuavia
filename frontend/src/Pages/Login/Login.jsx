@@ -1,11 +1,13 @@
 import React, { useState, useContext } from "react";
 import { NavLink } from "react-router-dom";
 
+import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../Context/AuthContext";
 import "./Login.css";
 
 const Login = () => {
     const { login } = useContext(AuthContext);
+    const navigate = useNavigate();
     const [formState, setFormState] = useState({
         accountname: "",
         password: "",
@@ -36,6 +38,7 @@ const Login = () => {
             alert("Login successful!");
             console.log("Login successful:", data);
             // Redirect to homepage or dashboard
+            navigate("/");
         } catch (error) {
             console.error("Login failed:", error);
             alert("Login failed:" + (error.response?.data?.message || error.message));
