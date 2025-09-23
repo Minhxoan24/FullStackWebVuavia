@@ -5,15 +5,13 @@ import { Modal } from "react-bootstrap";
 const ConfirmPurchaseModal = ({ show, onConfirm, onClose }) => {
     if (!show) return null;
 
-
-
     return (
         <Modal
             show={show}
             onHide={onClose}
             centered
             backdrop
-            backdropClassName="custom-backdrop"   // nền xám nhẹ
+            backdropClassName="custom-backdrop"
             dialogClassName="confirm-modal"
         >
             <div className="confirm-body text-center py-4">

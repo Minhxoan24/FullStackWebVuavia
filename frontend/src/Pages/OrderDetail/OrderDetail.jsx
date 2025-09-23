@@ -39,9 +39,9 @@ const statusBadge = (s) => {
     return { text: s, cls: "bg-secondary" };
 };
 
-const OrderDetail = () => {
+const OrderDetail = ({ orderDetailId }) => {  // Thêm prop orderDetailId
     const { orderId } = useParams();
-    const id = orderId ? Number(orderId) : null;
+    const id = orderDetailId || (orderId ? Number(orderId) : null);  // Ưu tiên prop, fallback useParams
 
     const [detail, setDetail] = useState(null);
     const [loading, setLoading] = useState(false);

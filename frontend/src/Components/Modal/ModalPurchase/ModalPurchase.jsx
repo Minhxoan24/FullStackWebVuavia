@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Modal } from "react-bootstrap";
+import "./ModalPurchase.css";
 
 import SpecList from "../../../Components/Product/SpecList";
 import QuantityInput from "../../../Components/Product/QuantityInput";
@@ -104,6 +105,7 @@ const ModalPurchaseTypeProduct = ({ show, onClose, id }) => {
         centered
         backdrop={true}
         scrollable
+        dialogClassName="modal-centered-custom"
       >
         <Modal.Header closeButton>
           <Modal.Title>Chi tiết sản phẩm</Modal.Title>
@@ -164,10 +166,6 @@ const ModalPurchaseTypeProduct = ({ show, onClose, id }) => {
             </div>
           )}
         </Modal.Body>
-
-
-
-
       </Modal>
       <ConfirmPurchaseModal
         show={showConfirm}

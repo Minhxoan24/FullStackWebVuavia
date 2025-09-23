@@ -1,10 +1,40 @@
-/* Container của sidebar */
+/* ===== Header giống ảnh ===== */
+.page-header {
+    background: #eeeeee;
+    /* xám nhạt */
+
+    /* viền đen */
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    padding-left: 300px;
+
+}
+
+.page-title {
+    margin: 0;
+    font-size: 26px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #000;
+    align-items: center;
+    justify-content: center;
+}
+
+.page-subtitle {
+    margin: 4px 0 0 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #666;
+    text-transform: uppercase;
+}
+
+/* ===== Sidebar ===== */
 .account-sidebar {
     border-radius: 12px;
     padding: 12px;
 }
 
-/* List item chung */
 .account-sidebar .list-group-item {
     border: none;
     border-radius: 8px;
@@ -18,14 +48,11 @@
     transition: all 0.2s ease-in-out;
 }
 
-/* Hover */
 .account-sidebar .list-group-item:hover {
     background-color: #f3f4f6;
-    /* xám nhạt */
     cursor: pointer;
 }
 
-/* Active */
 .account-sidebar .list-group-item.active {
     background-color: #fff4f0;
     border: 1px solid #ff7846;
@@ -33,10 +60,8 @@
     font-weight: 600;
 }
 
-/* Icon giả lập (có thể dùng react-icons) */
 .account-sidebar .list-group-item::before {
     font-family: "Font Awesome 5 Free";
-    /* Nếu dùng FA */
     font-weight: 900;
     margin-right: 8px;
 }

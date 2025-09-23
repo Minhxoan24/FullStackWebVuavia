@@ -1,8 +1,7 @@
 /* Làm nền modal xám nhẹ */
 .custom-backdrop {
-    background-color: #000 !important;
-    opacity: 0.18 !important;
-    /* xám rất nhẹ; tăng lên 0.25 nếu muốn đậm hơn */
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Đảm bảo backdrop không làm lệch */
 }
 
 /* Bo góc & đổ bóng nhẹ */
@@ -49,4 +48,15 @@
 
 .btn-danger:hover {
     background-color: #b13e35;
+}
+
+/* Căn giữa modal - tăng specificity tối đa để vượt Bootstrap */
+body .confirm-modal .modal-dialog {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    margin: 0 !important;
+    width: auto;
+    pointer-events: auto;
 }

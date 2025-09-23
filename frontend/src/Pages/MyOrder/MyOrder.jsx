@@ -26,18 +26,18 @@ const statusLabel = (s) => {
     return map[s] ?? s ?? "-";
 };
 
-const MyOrder = () => {
+const MyOrder = ({ onViewOrder }) => {  // Thêm prop onViewOrder
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const navigate = useNavigate();
 
-    const onViewOrder = (id) => {
-        if (!id) {
-            console.error("order_id is null/undefined");
-            return;
+    const onViewOrderHandler = (id) => {  // Đổi tên hàm
+        if (onViewOrder) {
+            onViewOrder(id);  // Gọi callback từ parent
+        } else {
+            navigate(`/order-detail/${id}`);  // Fallback nếu không có callback
         }
-        navigate(`/order-detail/${id}`);
     };
 
     useEffect(() => {
@@ -126,7 +126,7 @@ const MyOrder = () => {
                                             <Button
                                                 variant="warning"
                                                 className="px-3 fw-bold text-white"
-                                                onClick={() => onViewOrder(detailId)}
+                                                onClick={() => onViewOrderHandler(detailId)}  // Sử dụng handler mới
                                                 disabled={!detailId}
                                             >
                                                 XEM

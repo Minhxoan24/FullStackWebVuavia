@@ -1,0 +1,27 @@
+/* filepath: c:\Users\Minh\Desktop\Projcet\WebVuavia\FullStackWebVuavia\frontend\src\Components\Modal\ModalPurchase\ModalPurchase.css */
+
+/* Căn giữa modal cho ModalPurchase - giống ModalLogin */
+.modal-backdrop-custom {
+    position: fixed;
+    inset: 0;
+    z-index: 1050;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, .45);
+}
+
+.modal-dialog {
+    width: 100%;
+    max-width: 800px; /* Size lớn hơn cho ModalPurchase */
+    margin: 1rem;
+}
+
+/* Căn giữa modal cho ModalPurchase */
+body .modal-centered-custom .modal-dialog {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    margin: 0 !important;
+}
