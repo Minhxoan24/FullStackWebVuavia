@@ -1,0 +1,44 @@
+/* Modal base styles reused from ForgotPassword.css but scoped to component */
+.fp-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3000;
+  backdrop-filter: blur(4px);
+}
+.fp-modal {
+  width: 100%;
+  max-width: 520px;
+  background: linear-gradient(180deg, #ffffff, #fbfdff);
+  border-radius: 12px;
+  box-shadow: 0 18px 50px rgba(3, 10, 25, 0.24);
+  overflow: hidden;
+  transform: translateY(6px);
+}
+.fp-modal__header { padding: 20px 22px; border-bottom: 1px solid rgba(15, 23, 42, 0.04); background: linear-gradient(90deg, rgba(13,110,253,0.06), transparent); }
+.fp-modal__title { margin:0; font-weight:700; color:#0b5ed7; }
+.fp-modal__body { padding: 18px 22px; color:#243142; }
+.fp-modal__footer { padding: 14px 18px; display:flex; justify-content:flex-end; gap:10px; background:transparent; }
+.fp-modal__close { position: absolute; right: 14px; top: 14px; background: transparent; border: none; font-size: 20px; line-height: 1; color: #556; cursor: pointer; }
+.fp-modal__close:hover { color: #222; }
+.fp-modal--success .fp-modal__header { border-left: 6px solid #28a745; }
+.fp-modal--error .fp-modal__header { border-left: 6px solid #dc3545; }
+.fp-modal-backdrop--enter { background: rgba(12,18,30,0.55); }
+.fp-modal-backdrop--idle { background: rgba(12,18,30,0.55); }
+.fp-modal-backdrop--exit { background: rgba(12,18,30,0); transition: background 220ms ease; }
+.fp-modal--phase-enter { transform: translateY(4px) scale(.995); opacity: 0; }
+.fp-modal--phase-enter.fp-modal { transform: translateY(0); opacity: 1; transition: transform 240ms cubic-bezier(.2,.9,.3,1), opacity 180ms ease; }
+.fp-modal--phase-idle { transform: translateY(0); opacity: 1; }
+.fp-modal--phase-exit { transform: translateY(6px) scale(.98); opacity: 0; transition: transform 220ms ease, opacity 180ms ease; }
+.fp-modal .spinner-border { width: 1rem; height: 1rem; border-width: 2px; }
+body.fp-modal-open { overflow: hidden; }
+body.fp-modal-open::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: rgba(12, 18, 30, 0.12); /* subtle gray overlay */
+  z-index: 2500; /* below modal (3000) but above page content */
+  pointer-events: none; /* allow clicks to pass to modal/backdrop */
+}

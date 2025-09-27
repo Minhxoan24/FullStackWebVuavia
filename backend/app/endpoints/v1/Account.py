@@ -15,6 +15,18 @@ from app.service.AccountService.AccountInformationService import GetAccountInfor
 from app.service.AccountService.AccountLoginService import LoginAccountService
 from app.service.AccountService.AccountUpdateService import UpdateAccountInformationService 
 from app.service.AccountService.ChangePasswordService import ChangePasswordService
+
+# Forgot password imports
+from app.schemas.ForgotPasswordSchema.ForgotPasswordSchema import (
+    RequestOTPBody, VerifyOTPBody, ResetPasswordBody,
+    OTPStatusResponse, ResetPasswordResponse
+)
+from app.service.ForgotPasswordService.ForgotPasswordService import (
+    request_password_reset_otp,
+    verify_password_reset_otp,
+    reset_password_with_otp
+)
+
 router = APIRouter(tags=["Account"] , prefix="/Account")
 
 @router.post("/register" , response_model=ResponseRegisterSchema)
@@ -63,3 +75,26 @@ async def refresh_access_token(
         password=""  # Không cần password khi refresh
     )
     return await LoginAccountService(login_data, db)
+
+# ===== Forgot Password endpoints (moved under Account) =====
+@router.post("/forgot-password/request-otp", response_model=OTPStatusResponse)
+async def request_otp(body: RequestOTPBody, db: AsyncSession = Depends(get_async_session)):
+    res = await request_password_reset_otp(body.email, db)
+    # Service may return a pydantic model instance or a dict
+    if hasattr(res, "dict"):
+        return res
+    return OTPStatusResponse(**res)
+
+@router.post("/forgot-password/verify-otp", response_model=OTPStatusResponse)
+async def verify_otp(body: VerifyOTPBody):
+    res = await verify_password_reset_otp(body.email, body.otp)
+    if hasattr(res, "dict"):
+        return res
+    return OTPStatusResponse(**res)
+
+@router.post("/forgot-password/reset", response_model=ResetPasswordResponse)
+async def reset_password(body: ResetPasswordBody, db: AsyncSession = Depends(get_async_session)):
+    res = await reset_password_with_otp(body.email, body.otp, body.new_password, db)
+    if hasattr(res, "dict"):
+        return res
+    return ResetPasswordResponse(**res)

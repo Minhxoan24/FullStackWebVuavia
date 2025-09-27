@@ -22,7 +22,7 @@ class Order(Base):
     user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
    
     order_detail_id = Column(Integer, ForeignKey("order_details.id", ondelete="CASCADE"), unique=True)
-    
+    transaction_history_id = Column(Integer, ForeignKey("transaction_histories.id", ondelete="SET NULL"), unique=True, nullable=True)
 
     # Relationships
     user = relationship("User", back_populates="orders")

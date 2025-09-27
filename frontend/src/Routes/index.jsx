@@ -31,6 +31,7 @@ import PageAccount from '../Pages/PageAccount/PageAccount.jsx';
 import MyVoucher from '../Pages/MyVoucher/MyVoucher.jsx';
 import DetailTypeProduct from '../Pages/DetailPageTypeProduct/DetailPageTypeProduct.jsx';
 import DepositPage from '../Pages/DepositPage/DepositPage.jsx';
+import ForgotPassword from '../Pages/ForgotPassword/ForgotPassword.jsx';
 const AppRoutes = () => {
     return (
         <Routes>
@@ -48,6 +49,7 @@ const AppRoutes = () => {
                 <Route path={Path.ACC_SPAM} element={<AccSpam />} />
                 <Route path={Path.REGISTER} element={<Register />} />
                 <Route path={Path.LOGIN} element={<Login />} />
+                <Route path={Path.FORGOT_PASSWORD} element={<ForgotPassword />} />
                 <Route path={Path.TIPS} element={<TIPS />} />
                 <Route path={Path.TIP_USE_FACE} element={<TipUseface />} />
                 <Route path={Path.TIP_CREATE_ADS} element={<TipCreateADS />} />

@@ -1,7 +1,8 @@
 import apiClient from "./ApiService";
+
 const getProfile = async () => {
     try {
-        const res = await apiClient.get("/Account/information"); // Sửa lại đường dẫn cho đúng với backend
+        const res = await apiClient.get("/Account/information");
         return res.data;
     } catch (error) {
         console.error("Error fetching profile:", error);
@@ -29,7 +30,6 @@ const changePassword = async (data) => {
     }
 };
 
-
 const GetTransactionHistory = async () => {
     try {
         const res = await apiClient.get("/transaction-history/my-transactions");
@@ -39,6 +39,7 @@ const GetTransactionHistory = async () => {
         throw error;
     }
 };
+
 const getMyVoucher = async () => {
     try {
         const res = await apiClient.get("/voucher/my-vouchers");
@@ -48,6 +49,7 @@ const getMyVoucher = async () => {
         throw error;
     }
 };
+
 const getMyOrder = async () => {
     try {
         const res = await apiClient.get("/orders/my-orders");
@@ -57,6 +59,7 @@ const getMyOrder = async () => {
         throw error;
     }
 };
+
 const getMyOrderDetail = async (order_detail_Id) => {
     try {
         const res = await apiClient.get(`/orders/order/orderDetail/${order_detail_Id}`);
@@ -67,6 +70,51 @@ const getMyOrderDetail = async (order_detail_Id) => {
     }
 };
 
+// ===== FORGOT PASSWORD FUNCTIONS =====
+const requestPasswordResetOTP = async (email) => {
+    try {
+        const res = await apiClient.post("/Account/forgot-password/request-otp", { email });
+        return res.data;
+    } catch (error) {
+        console.error("Error requesting password reset OTP:", error);
+        throw error;
+    }
+};
 
+const verifyPasswordResetOTP = async (email, otp) => {
+    try {
+        const res = await apiClient.post("/Account/forgot-password/verify-otp", { email, otp });
+        return res.data;
+    } catch (error) {
+        console.error("Error verifying password reset OTP:", error);
+        throw error;
+    }
+};
 
-export { getProfile, updateProfile, changePassword, GetTransactionHistory, getMyVoucher, getMyOrder, getMyOrderDetail };
+const resetPasswordWithOTP = async (email, otp, new_password) => {
+    try {
+        const res = await apiClient.post("/Account/forgot-password/reset", { 
+            email, 
+            otp, 
+            new_password 
+        });
+        return res.data;
+    } catch (error) {
+        console.error("Error resetting password:", error);
+        throw error;
+    }
+};
+
+export { 
+    getProfile, 
+    updateProfile, 
+    changePassword, 
+    GetTransactionHistory, 
+    getMyVoucher, 
+    getMyOrder, 
+    getMyOrderDetail,
+    // Forgot password exports
+    requestPasswordResetOTP,
+    verifyPasswordResetOTP,
+    resetPasswordWithOTP
+};

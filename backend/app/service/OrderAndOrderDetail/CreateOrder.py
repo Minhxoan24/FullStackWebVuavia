@@ -106,13 +106,16 @@ async def CreateOrderService(
         # Ghi lịch sử giao dịch
         transaction = TransactionHistory(
             user_id=current_user,
-            order_id=order.id,
-            amount=total_price,
+            amount=-total_price,  # Trừ tiền nên âm
             type=TransactionType.PURCHASE,
             description=f"Order payment for product {type_product.name}",
             created_at=datetime.now(timezone.utc).replace(tzinfo=None)  # Sửa: naive datetime
         )
         db.add(transaction)
+        await db.flush()
+
+        # Liên kết transaction với order
+        order.transaction_history_id = transaction.id
 
         # Commit TẤT CẢ một lần ở cuối
         await db.commit()

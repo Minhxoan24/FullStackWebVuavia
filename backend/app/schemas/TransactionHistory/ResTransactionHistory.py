@@ -9,7 +9,6 @@ class TransactionHistoryResponse(BaseModel):
     type: str  # "PURCHASE" hoặc "DEPOSIT"
     amount: float
     description: Optional[str] = None
-    order_id: Optional[int] = None
     created_at: datetime
     
     class Config:

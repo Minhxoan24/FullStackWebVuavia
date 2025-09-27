@@ -1,5 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi import Request, HTTPException
+from fastapi.responses import JSONResponse
+
+# Use the MessageSchema for consistent error/success payloads
+from app.schemas.Message.Message import MessageSchema
 
 # Import tất cả models TRƯỚC KHI tạo FastAPI app để đăng ký mappers
 
@@ -24,6 +29,25 @@ app.include_router(Voucher.router)
 app.include_router(TransactionHistory.router)
 app.include_router(InformationTypeProduct.router)
 app.include_router(Deposit.router)
+
+
+# Global handler for HTTPException to return MessageSchema JSON
+@app.exception_handler(HTTPException)
+async def http_exception_handler(request: Request, exc: HTTPException):
+    # exc.detail may be string or other; normalize to string message
+    detail = exc.detail
+    message = detail if isinstance(detail, str) else (detail.get('message') if isinstance(detail, dict) else str(detail))
+    payload = MessageSchema(status="error", message=str(message)).dict()
+    return JSONResponse(status_code=exc.status_code, content=payload)
+
+
+# Generic exception handler to avoid exposing stack traces
+@app.exception_handler(Exception)
+async def generic_exception_handler(request: Request, exc: Exception):
+    # Log is handled elsewhere; return generic message
+    payload = MessageSchema(status="error", message="Internal server error").dict()
+    return JSONResponse(status_code=500, content=payload)
+
 
 # .\venv\Scripts\Activate.ps1
 # uvicorn app.main:app --reload

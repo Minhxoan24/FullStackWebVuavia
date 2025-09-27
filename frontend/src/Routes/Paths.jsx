@@ -18,6 +18,7 @@ const PATHS = {
     // Đăng ký và đăng nhập
     REGISTER: "/register",
     LOGIN: "/login",
+    FORGOT_PASSWORD: "/forgot-password",
 
     // Các mẹo và hướng dẫn
     TIPS: "/tips",

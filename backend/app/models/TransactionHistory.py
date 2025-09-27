@@ -15,8 +15,8 @@ class TransactionHistory(Base):
     type = Column(SAEnum(TransactionType), nullable=False)  # Loại giao dịch
     amount = Column(Float, nullable=False)  # Số tiền (âm cho trừ, dương cho cộng)
     description = Column(String(255), nullable=True)  # Mô tả (ví dụ: "Mua 5 account Facebook", "Nạp từ ngân hàng BIDV")
-    order_id = Column(Integer, ForeignKey("orders.id"), nullable=True)  # Liên kết với order nếu là PURCHASE
-    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+    
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc).replace(tzinfo=None))  #
 
     # Relationships (tùy chọn)
     user = relationship("User", back_populates="transaction_histories")
