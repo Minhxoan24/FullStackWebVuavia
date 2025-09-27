@@ -30,7 +30,7 @@ import OverView from '../Pages/OverView/OverView.jsx';
 import PageAccount from '../Pages/PageAccount/PageAccount.jsx';
 import MyVoucher from '../Pages/MyVoucher/MyVoucher.jsx';
 import DetailTypeProduct from '../Pages/DetailPageTypeProduct/DetailPageTypeProduct.jsx';
-
+import DepositPage from '../Pages/DepositPage/DepositPage.jsx';
 const AppRoutes = () => {
     return (
         <Routes>
@@ -61,7 +61,7 @@ const AppRoutes = () => {
                 <Route path={Path.PAGE_ACCOUNT} element={<PageAccount />} />
                 <Route path={Path.MY_VOUCHER} element={<MyVoucher />} />
                 <Route path={Path.DETAIL_TYPE_PRODUCT} element={<DetailTypeProduct />} />
-
+                <Route path={Path.DEPOSIT} element={<DepositPage />} />
             </Route>
 
         </Routes>

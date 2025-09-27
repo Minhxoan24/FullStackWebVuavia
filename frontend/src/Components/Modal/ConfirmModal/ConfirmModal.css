@@ -50,13 +50,24 @@
     background-color: #b13e35;
 }
 
-/* Căn giữa modal - tăng specificity tối đa để vượt Bootstrap */
-body .confirm-modal .modal-dialog {
-    position: fixed !important;
-    top: 50% !important;
-    left: 50% !important;
-    transform: translate(-50%, -50%) !important;
-    margin: 0 !important;
-    width: auto;
-    pointer-events: auto;
+.modal-backdrop-custom {
+    position: fixed;
+    inset: 0;
+    z-index: 1055; /* Cao hơn modal cha nếu cần */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.modal-dialog {
+    width: 100%;
+    max-width: 500px;
+    margin: 1rem;
+}
+
+.custom-modal {
+    border: none;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
 }

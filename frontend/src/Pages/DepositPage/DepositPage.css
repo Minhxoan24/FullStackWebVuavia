@@ -1,0 +1,111 @@
+/* ===== Header cam trên cùng ===== */
+
+.topup-hero {
+    background: linear-gradient(90deg, #FD6800, #FFD300);
+    color: #fff;
+    padding: 10px 0;
+    border: 1px solid #00000022;
+}
+
+.topup-hero__inner {
+    height: 3px;
+    display: flex;
+    align-items: center;
+    padding-right: .5rem;
+}
+
+.topup-hero__title {
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 1;
+    letter-spacing: .2px;
+}
+
+.topup-hero.sticky-top {
+    z-index: 1030;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, .08);
+}
+
+/* ===== Body chọn mệnh giá ===== */
+.topup-page .pointer {
+    cursor: pointer;
+}
+
+.fw-500 {
+    font-weight: 500;
+}
+
+.list-group-item.active-like {
+    border: 1px solid #dc3545 !important;
+    /* viền đỏ khi chọn */
+    background: #fff !important;
+}
+
+.list-group-item.active-like .form-check-input {
+    border-color: #dc3545;
+}
+
+.list-group-item .form-check-input:checked {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+.card {
+    border-radius: .5rem;
+}
+
+/* ===== Màn QR ===== */
+.qr-wrap {
+    padding: 28px 16px;
+}
+
+.qr-title {
+    max-width: 520px;
+    margin: 0 auto 18px;
+    font-weight: 600;
+    color: #3a3a3a;
+    text-align: center;
+}
+
+.qr-img {
+    display: block;
+    width: 280px;
+    max-width: 80vw;
+    margin: 10px auto 16px;
+}
+
+.qr-note,
+.qr-order,
+.qr-tip {
+    font-size: 14px;
+    margin-bottom: 6px;
+    text-align: center;
+}
+
+.qr-order span {
+    font-weight: 600;
+}
+
+.qr-done-btn {
+    background: linear-gradient(90deg, #FD6800, #FFD300);
+    margin-top: 14px;
+    padding: 12px 18px;
+    width: 100%;
+    max-width: 640px;
+    display: block;
+    /* Để margin auto hoạt động */
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 8px;
+    /* Bo góc */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* Đổ bóng nhẹ */
+    transition: all 0.3s ease;
+    /* Hiệu ứng hover */
+}
+
+.qr-done-btn:hover {
+    transform: translateY(-2px);
+    /* Nâng lên khi hover */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}

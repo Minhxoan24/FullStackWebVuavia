@@ -6,11 +6,12 @@ import "./PageAccount.css";
 import MyAccount from "../../Pages/MyAccount/MyAccount.jsx";
 import MyOrders from "../../Pages/MyOrder/MyOrder.jsx";
 import TransactionHistory from "../../Pages/TransactionHistory/TransactionHistory.jsx";
-import ReCharge from "../../Pages/ReCharge/ReCharge.jsx";
+import DepositPage from "../DepositPage/DepositPage.jsx";
 import OverView from "../../Pages/OverView/OverView.jsx";
 import MyVoucher from "../MyVoucher/MyVoucher.jsx";
 import HomePage from "../HomePage/HomePage.jsx";
 import OrderDetail from "../OrderDetail/OrderDetail.jsx";
+
 
 const PAGE_META = {
     OverView: { title: "TRANG TỔNG QUAN", subtitle: "TRANG TỔNG QUAN" },
@@ -38,7 +39,7 @@ const PageAccount = () => {
             case "MyOrders": return <MyOrders onViewOrder={(id) => { setOrderDetailId(id); setActivePage("OrderDetail"); }} />;  // Truyền callback
             case "OrderDetail": return <OrderDetail orderDetailId={orderDetailId} />;  // Thêm case mới
             case "TransactionHistory": return <TransactionHistory />;
-            case "ReCharge": return <ReCharge />;
+            case "ReCharge": return <DepositPage />;
             case "MyAccount": return <MyAccount />;
             case "promotions": return <MyVoucher />;
             case "logout": logout(); return <HomePage />;

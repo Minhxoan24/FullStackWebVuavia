@@ -30,3 +30,4 @@ class User(Base):
 
     voucher_usages = relationship("VoucherUsage", back_populates="user")
 
+    deposit_requests = relationship("DepositRequest", back_populates="user")

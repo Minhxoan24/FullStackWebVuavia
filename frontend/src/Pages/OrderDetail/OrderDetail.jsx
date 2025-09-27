@@ -153,8 +153,8 @@ const OrderDetail = ({ orderDetailId }) => {  // Thêm prop orderDetailId
         <div className="container py-4 order-detail-page">
             {/* ===== Header đơn hàng ===== */}
             <div className="order-header card border-0 shadow-sm mb-4">
-                <div className="card-body d-flex flex-wrap justify-content-between align-items-center">
-                    <div className="lh-sm">
+                <div className="card-body d-flex flex-wrap justify-content-between align-items-center btn btn-warning">
+                    <div className="lh-sm ">
                         <div className="small text-muted">
                             Đơn hàng{" "}
                             <span className="fw-semibold">#{detail?.order_id ?? detail?.id}</span>{" "}

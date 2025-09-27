@@ -6,13 +6,14 @@ from .Roles import Role
 from .UserRole import user_roles
 from .Orders import Order
 from .OrderDetail import OrderDetail
-from .TransactionHistory import TransactionHistory
+from .TransactionHistory import TransactionHistory, TransactionType
 from .Vouchers import Voucher
 from .AccountVuavia import AccountVuavia
 from .TypeProduct import TypeProduct
 from .Category import Category
 from .VoucherUsage import VoucherUsage
 from .InforTypeProduct import InforTypeProduct
+from .DepositRequest import DepositRequest, DepositStatus
 
 __all__ = [
     "Base",
@@ -21,11 +22,14 @@ __all__ = [
     "user_roles", 
     "Order",
     "OrderDetail",
-    "TransactionHistory", 
+    "TransactionHistory",
+    "TransactionType",  # Thêm
     "Voucher",
     "AccountVuavia",
     "TypeProduct",
     "Category",
     "VoucherUsage" , 
-    "InforTypeProduct"
+    "InforTypeProduct",
+    "DepositRequest",
+    "DepositStatus"  # Thêm
 ]

@@ -35,7 +35,7 @@ const PATHS = {
     ORDER_DETAIL: "/order-detail/:orderId",
     MY_VOUCHER: "/my-voucher",
     DETAIL_TYPE_PRODUCT: "/detail-type-product/:id",
-    
+    Deposit: "/deposit"
 };
 
 export default PATHS;

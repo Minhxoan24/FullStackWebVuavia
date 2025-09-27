@@ -53,61 +53,67 @@ const TransactionHistory = () => {
     const hasData = useMemo(() => (rows?.length ?? 0) > 0, [rows]);
 
     return (
-        <div className="container py-4">
-            {/* Header bar */}
-            <div className="history-title d-flex align-items-center px-3 py-2 mb-3">
-                <span className="me-2">↩</span>
-                <strong>Lịch sử giao dịch</strong>
+        <>
+            {/* HEADER – thanh màu cam trên cùng y hệt deposit */}
+            <div className="topup-hero py-4 mb-4">
+                <div className="container">
+                    <div className="topup-hero__inner">
+                        <span className="topup-hero__title">Lịch sử giao dịch</span>
+                    </div>
+                </div>
             </div>
 
-            {loading && (
-                <div className="d-flex align-items-center gap-2">
-                    <Spinner animation="border" size="sm" />
-                    <span>Đang tải…</span>
-                </div>
-            )}
+            <div className="container py-4">
+                {loading && (
+                    <div className="d-flex align-items-center gap-2">
+                        <Spinner animation="border" size="sm" />
+                        <span>Đang tải…</span>
+                    </div>
+                )}
 
-            {err && !loading && <div className="alert alert-danger">{err}</div>}
+                {err && !loading && <div className="alert alert-danger">{err}</div>}
 
-            {!loading && !err && !hasData && (
-                <div className="text-muted">Chưa có giao dịch nào.</div>
-            )}
+                {!loading && !err && !hasData && (
+                    <div className="text-muted">Chưa có giao dịch nào.</div>
+                )}
 
-            {!loading && !err && hasData && (
-                <div className="tx-table-wrapper">
-                    <table className="table align-middle tx-table">
-                        <thead>
-                            <tr>
-                                <th className="small text-secondary">#</th>
-                                <th className="small text-secondary">SỐ TIỀN</th>
-                                <th className="small text-secondary">NỘI DUNG</th>
-                                <th className="small text-secondary">THỜI GIAN</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {rows.map((r) => (
-                                <tr key={r.id}>
-                                    <td className="text-secondary">#{r.id}</td>
-                                    <td className={`fw-bold ${amountClass(r.amount)}`}>
-                                        {fmtMoneySigned(r.amount)}
-                                    </td>
-                                    <td className="tx-desc">
-                                        {r.description}
-                                        {r.order_id ? (
-                                            <>
-                                                {" "}
-                                                - <span className="tx-link">Đơn hàng #{r.order_id}</span>
-                                            </>
-                                        ) : null}
-                                    </td>
-                                    <td className="text-secondary">{fmtDateTime(r.created_at)}</td>
+                {!loading && !err && hasData && (
+                    <div className="tx-table-wrapper">
+                        <table className="table align-middle tx-table">
+                            <thead>
+                                <tr>
+                                    <th className="small text-secondary">#</th>
+                                    <th className="small text-secondary">SỐ TIỀN</th>
+                                    <th className="small text-secondary">NỘI DUNG</th>
+                                    <th className="small text-secondary">THỜI GIAN</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-            )}
-        </div>
+                            </thead>
+                            <tbody>
+                                {rows.map((r) => (
+                                    <tr key={r.id}>
+                                        <td className="text-secondary">#{r.id}</td>
+                                        <td className={`fw-bold ${amountClass(r.amount)}`}>
+                                            {fmtMoneySigned(r.amount)}
+                                        </td>
+                                        <td className="tx-desc">
+                                            {r.description}
+                                            {r.order_id ? (
+                                                <>
+                                                    {" "}
+                                                    - <span className="tx-link">Đơn hàng #{r.order_id}</span>
+                                                </>
+                                            ) : null}
+                                        </td>
+                                        <td className="text-secondary">{fmtDateTime(r.created_at)}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
+            </div>
+        </>
     );
-}
+};
+
 export default TransactionHistory;

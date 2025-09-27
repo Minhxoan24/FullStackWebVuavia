@@ -1,10 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
 from typing import Optional
 from app.db.DataBase import get_async_session
 from app.core.auth import get_current_user
 from app.core.author import get_current_admin_user
 from app.models.Users import User
+from app.models.AccountVuavia import AccountVuavia  # Import model AccountVuavia
 
 # Schema imports
 from app.schemas.AccountVuaviaSchema.CreateVuavia import CreateVuaviaSchema, BulkCreateVuaviaSchema
@@ -123,3 +125,15 @@ async def get_available_count(
     """Đếm số accounts AVAILABLE theo type product"""
     count = await GetAvailableCountByType(type_product_id, db)
     return {"type_product_id": type_product_id, "available_count": count}
+
+@router.get("/list")
+async def list_accounts(
+    page: int = Query(1, ge=1),
+    limit: int = Query(10, ge=1, le=100),
+    db: AsyncSession = Depends(get_async_session)
+):
+    # Logic pagination với SQLAlchemy
+    offset = (page - 1) * limit
+    query = select(AccountVuavia).offset(offset).limit(limit)
+    result = await db.execute(query)
+    return result.scalars().all()

@@ -1,7 +1,6 @@
 // src/Components/Modal/ModalPurchaseTypeProduct.jsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Modal } from "react-bootstrap";
 import "./ModalPurchase.css";
 
 import SpecList from "../../../Components/Product/SpecList";
@@ -22,6 +21,42 @@ const ModalPurchaseTypeProduct = ({ show, onClose, id }) => {
   const handleCloseConfirm = () => setShowConfirm(false);
   const handleShowConfirm = () => setShowConfirm(true);
   const { refreshUser } = React.useContext(AuthContext);
+
+  const dialogRef = useRef(null);
+  const firstFieldRef = useRef(null);
+
+  useEffect(() => {
+    if (!show) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    firstFieldRef.current?.focus();
+
+    const onKey = (e) => {
+      if (e.key === "Escape") onClose();
+      if (e.key === "Tab" && dialogRef.current) {
+        const focusables = dialogRef.current.querySelectorAll(
+          'a[href],button:not([disabled]),textarea,input,select,[tabindex]:not([tabindex="-1"])'
+        );
+        if (!focusables.length) return;
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault(); last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault(); first.focus();
+        }
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [show, onClose]);
+
+  const onBackdropClick = useCallback((e) => {
+    if (e.target === e.currentTarget) onClose();
+  }, [onClose]);
 
   // Fetch product detail
   useEffect(() => {
@@ -95,78 +130,83 @@ const ModalPurchaseTypeProduct = ({ show, onClose, id }) => {
     console.error("Lỗi parse description:", e);
   }
 
+  if (!show) return null;
 
   return (
     <>
-      <Modal
-        show={show}
-        onHide={onClose}
-        size="lg"
-        centered
-        backdrop={true}
-        scrollable
-        dialogClassName="modal-centered-custom"
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>Chi tiết sản phẩm</Modal.Title>
-        </Modal.Header>
-
-        <Modal.Body>
-          {loading ? (
-            <div className="text-center py-4">
-              <div className="spinner-border" role="status"></div>
-              <p className="mt-2">Đang tải thông tin sản phẩm...</p>
+      <div className="modal-backdrop-custom" onClick={onBackdropClick}>
+        <div
+          className="modal-dialog modal-lg modal-dialog-centered"
+          ref={dialogRef}
+          role="dialog"
+          aria-modal="true"
+        >
+          <div className="modal-content custom-modal">
+            <div className="modal-header">
+              {/* <h5 className="modal-title">Chi tiết sản phẩm</h5> */}
+              {/* <button
+                type="button"
+                className="btn-close"
+                onClick={onClose}
+                aria-label="Close"
+              ></button> */}
             </div>
-          ) : error ? (
-            <div className="alert alert-danger">{error}</div>
-          ) : product ? (
-            <div className="row g-4">
-              {/* Hình ảnh */}
-              <div className="col-lg-6">
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="img-fluid rounded"
-                  style={{ maxHeight: 300, objectFit: "contain" }}
-                />
-              </div>
-
-              {/* Thông tin */}
-              <div className="col-lg-6">
-                <h5 className="fw-bold">{product.name}</h5>
-                <div className="text-success fw-semibold mb-2">
-                  Còn sẵn: {product.quantity ?? 0} sản phẩm
+            <div className="modal-body">
+              {loading ? (
+                <div className="text-center py-4">
+                  <div className="spinner-border" role="status"></div>
+                  <p className="mt-2">Đang tải thông tin sản phẩm...</p>
                 </div>
+              ) : error ? (
+                <div className="alert alert-danger">{error}</div>
+              ) : product ? (
+                <div className="row g-4">
+                  {/* Hình ảnh */}
+                  <div className="col-lg-6">
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      className="img-fluid rounded"
+                      style={{ maxHeight: 300, objectFit: "contain" }}
+                    />
+                  </div>
 
-                <p className="text-danger fs-5 fw-bold">
-                  {formatPrice(product.price)} đ
-                </p>
+                  {/* Thông tin */}
+                  <div className="col-lg-6">
+                    <h5 className="fw-bold">{product.name}</h5>
+                    <div className="text-success fw-semibold mb-2">
+                      Còn sẵn: {product.quantity ?? 0} sản phẩm
+                    </div>
 
+                    <p className="text-danger fs-5 fw-bold">
+                      {formatPrice(product.price)} đ
+                    </p>
 
+                    <SpecList specs={descriptionData} />
+                    <div className="my-3 d-flex align-items-center gap-3">
+                      <QuantityInput
+                        value={qty}
+                        min={1}
+                        max={product.quantity ?? 1}
+                        onChange={setQty}
+                      />
+                      <Button text="MUA TÀI KHOẢN" onClick={handleBuy} />
+                    </div>
 
-                <SpecList specs={descriptionData} />
-                <div className="my-3 d-flex align-items-center gap-3">
-                  <QuantityInput
-                    value={qty}
-                    min={1}
-                    max={product.quantity ?? 1}
-                    onChange={setQty}
-                  />
-                  <Button text="MUA TÀI KHOẢN" onClick={handleBuy} />
+                    <div className="mt-3 small text-muted">
+                      Mã: HMT{String(product.id).padStart(2, "0")}
+                    </div>
+                  </div>
                 </div>
-
-                <div className="mt-3 small text-muted">
-                  Mã: HMT{String(product.id).padStart(2, "0")}
+              ) : (
+                <div className="alert alert-warning">
+                  Không tìm thấy sản phẩm với ID: {id}
                 </div>
-              </div>
+              )}
             </div>
-          ) : (
-            <div className="alert alert-warning">
-              Không tìm thấy sản phẩm với ID: {id}
-            </div>
-          )}
-        </Modal.Body>
-      </Modal>
+          </div>
+        </div>
+      </div>
       <ConfirmPurchaseModal
         show={showConfirm}
         onClose={handleCloseConfirm}
