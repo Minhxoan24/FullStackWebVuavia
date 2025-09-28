@@ -1,0 +1,58 @@
+:root {
+    --brand-orange: #ff6f3d;
+    /* tông cam như ảnh */
+    --card-radius: 12px;
+}
+
+/* khung trắng, bo góc, đổ bóng nhẹ */
+.account-card {
+    max-width: 760px;
+    background-color: #ffffff;
+    border-radius: var(--card-radius);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+/* label có dấu * */
+.form-label.required::after {
+    content: " *";
+    color: #dc3545;
+    font-weight: 600;
+}
+
+/* input bo tròn + shadow nhẹ như ảnh */
+.form-control-elevated {
+    border-radius: 10px;
+    border-color: #e9ecef;
+    box-shadow: 0 2px 8px rgba(33, 37, 41, 0.08);
+}
+
+.form-control-elevated:focus {
+    border-color: #ced4da;
+    box-shadow: 0 0 0 .2rem rgba(13, 110, 253, .1), 0 4px 12px rgba(33, 37, 41, .12);
+}
+
+/* tiêu đề section "Thay đổi mật khẩu" */
+.section-title {
+    letter-spacing: .02em;
+}
+
+/* nút cam viền như ảnh */
+.btn-save {
+    background: #fff;
+    color: var(--brand-orange);
+    border: 2px solid var(--brand-orange);
+    border-radius: 10px;
+    transition: all .15s ease-in-out;
+}
+
+.btn-save:hover {
+    background: var(--brand-orange);
+    color: #fff;
+    border-color: var(--brand-orange);
+}
+
+/* khoảng cách khung ngoài */
+.account-wrap {
+    background: #f8fafc;
+    min-height: 100vh;
+}

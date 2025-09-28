@@ -5,12 +5,15 @@ import Navbar from "../Components/Navbar/Navbar.jsx";
 import Footer from "../Components/Footer/Footer.jsx";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./MainLayout.css";
+import TopBar from '../Components/TopBar/TopBar.jsx';
 
 const MainLayout = () => {
     return (
         <div>
             {/* Phần cố định trên cùng */}
-            <div className="fixed-top">
+            <div className="fixed-top ">
+                <TopBar />
+
                 {/* Header */}
                 <Header />
 
@@ -23,7 +26,7 @@ const MainLayout = () => {
             </div>
 
             {/* Nội dung chính */}
-            <div style={{ paddingTop: "110px" }}>
+            <div style={{ paddingTop: "110px", marginTop: "30px" }}>
                 <main>
                     <Outlet />
                 </main>

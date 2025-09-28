@@ -4,7 +4,7 @@ from sqlalchemy import select
 from datetime import datetime, timezone
 import random
 import logging
-import asyncio
+from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Optional
 
 from app.models.Users import User

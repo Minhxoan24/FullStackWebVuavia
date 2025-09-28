@@ -2,9 +2,12 @@ from pydantic import BaseModel, Field, field_validator
 from typing import Optional
 
 class ChangePasswordSchema(BaseModel):
-    current_password: str = Field(..., min_length=1, description="Mật khẩu hiện tại")
-    new_password: str = Field(..., min_length=6, description="Mật khẩu mới (tối thiểu 6 ký tự)")
-    confirm_password: str = Field(..., min_length=6, description="Xác nhận mật khẩu mới")
+    current_password: str = Field(..., min_length=1, description="Mật khẩu hiện tại", alias="currentPassword")
+    new_password: str = Field(..., min_length=8, description="Mật khẩu mới (tối thiểu 8 ký tự)", alias="newPassword")
+    confirm_password: str = Field(..., min_length=8, description="Xác nhận mật khẩu mới", alias="confirmPassword")
+
+    class Config:
+        allow_population_by_field_name = True
 
     @field_validator('confirm_password')
     @classmethod

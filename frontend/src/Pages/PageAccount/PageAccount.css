@@ -7,13 +7,14 @@
     padding: 16px 20px;
     margin-bottom: 20px;
     padding-left: 300px;
+    height: 80px;
 
 }
 
 .page-title {
     margin: 0;
     font-size: 26px;
-    font-weight: 800;
+    font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 1px;
     color: #000;
@@ -22,7 +23,7 @@
 }
 
 .page-subtitle {
-    margin: 4px 0 0 0;
+
     font-size: 14px;
     font-weight: 600;
     color: #666;

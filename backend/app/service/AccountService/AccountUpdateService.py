@@ -61,10 +61,7 @@ async def UpdateAccountInformationService(
         await db.commit()
         await db.refresh(user)
 
-        return MessegeUpdateSchema(
-            status="success",
-            message="Account information updated successfully"
-        )
+        return MessegeUpdateSchema(message="Thông tin tài khoản đã được cập nhật thành công")
         
     except HTTPException:
         raise

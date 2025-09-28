@@ -105,10 +105,27 @@ const resetPasswordWithOTP = async (email, otp, new_password) => {
     }
 };
 
+const uploadAvatar = async (file) => {
+    try {
+        const formData = new FormData();
+        formData.append('file', file);
+        const res = await apiClient.post("/Account/avatar", formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+        return res.data; // assume {status, message}
+    } catch (error) {
+        console.error("Error uploading avatar:", error);
+        throw error;
+    }
+};
+
 export { 
     getProfile, 
     updateProfile, 
     changePassword, 
+    uploadAvatar,
     GetTransactionHistory, 
     getMyVoucher, 
     getMyOrder, 

@@ -2,7 +2,7 @@ import React, { useState, useContext, useMemo, useEffect } from "react";
 import { Container, Row, Col, Card, ListGroup } from "react-bootstrap";
 import { AuthContext } from "../../Context/AuthContext";
 import "./PageAccount.css";
-
+import { uploadAvatar } from '../../Services/ApiUserService';
 import MyAccount from "../../Pages/MyAccount/MyAccount.jsx";
 import MyOrders from "../../Pages/MyOrder/MyOrder.jsx";
 import TransactionHistory from "../../Pages/TransactionHistory/TransactionHistory.jsx";

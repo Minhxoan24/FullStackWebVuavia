@@ -1,41 +1,33 @@
-"""Add indexes and constraints for AccountVuavia performance
+"""Init fresh baseline
 
-Revision ID: performance_indexes_2025_09_12
-Revises: previous_revision
-Create Date: 2025-09-12 10:00:00.000000
+Revision ID: init_fresh_2025_09_28
+Revises: None
+Create Date: 2025-09-28 15:45:00.000000
 
 """
+
 from alembic import op
 import sqlalchemy as sa
 
-# revision identifiers
-revision = 'performance_indexes_2025_09_12'
-down_revision = 'cdafc1a6e4ad'  # Update này với revision gần nhất
+
+# Revision identifiers, used by Alembic
+revision = "init_fresh_2025_09_28"
+down_revision = None   # Đây là revision gốc
 branch_labels = None
 depends_on = None
 
+
 def upgrade() -> None:
-    # Thêm unique constraint cho login_name nếu chưa có
-    op.create_unique_constraint('uq_account_vuavia_login_name', 'account_vuavia', ['login_name'])
-    
-    # Thêm indexes để tối ưu performance
-    op.create_index('ix_account_vuavia_login_name', 'account_vuavia', ['login_name'])
-    op.create_index('ix_account_vuavia_status', 'account_vuavia', ['status'])
-    op.create_index('ix_account_vuavia_type_product_id', 'account_vuavia', ['type_product_id'])
-    op.create_index('ix_account_vuavia_updated_at', 'account_vuavia', ['updated_at'])
-    
-    # Composite index cho common queries
-    op.create_index('ix_account_vuavia_status_type', 'account_vuavia', ['status', 'type_product_id'])
-    op.create_index('ix_account_vuavia_hold_timeout', 'account_vuavia', ['status', 'updated_at'])
+    """
+    Vì đây là baseline, bạn có thể để trống (coi DB hiện tại là đúng rồi).
+    Nếu muốn ghi cấu trúc bảng thì có thể dump model ra, 
+    nhưng thường baseline chỉ để trống.
+    """
+    pass
+
 
 def downgrade() -> None:
-    # Xóa indexes
-    op.drop_index('ix_account_vuavia_hold_timeout', 'account_vuavia')
-    op.drop_index('ix_account_vuavia_status_type', 'account_vuavia')
-    op.drop_index('ix_account_vuavia_updated_at', 'account_vuavia')
-    op.drop_index('ix_account_vuavia_type_product_id', 'account_vuavia')
-    op.drop_index('ix_account_vuavia_status', 'account_vuavia')
-    op.drop_index('ix_account_vuavia_login_name', 'account_vuavia')
-    
-    # Xóa unique constraint
-    op.drop_constraint('uq_account_vuavia_login_name', 'account_vuavia', type_='unique')
+    """
+    Không cần downgrade vì đây là baseline.
+    """
+    pass

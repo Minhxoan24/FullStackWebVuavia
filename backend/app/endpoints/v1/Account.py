@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.DataBase import get_async_session
 from app.core.auth import get_current_user
@@ -8,6 +8,7 @@ from app.schemas.AccountSchema.AccountInformationSchema import InformationAccoun
 from app.schemas.AccountSchema.AccountLoginSchema import LoginReponseSchema  , LoginUserSchema
 from app.schemas.AccountSchema.AccountUpdateSchema import AccountUpdateSchema, MessegeUpdateSchema
 from app.schemas.AccountSchema.ChangePassword import ChangePasswordSchema , ChangePasswordResponse
+from app.schemas.Message.Message import MessageSchema
 
 
 from app.service.AccountService.AccountRegisterService import RegisterAccountService
@@ -15,6 +16,7 @@ from app.service.AccountService.AccountInformationService import GetAccountInfor
 from app.service.AccountService.AccountLoginService import LoginAccountService
 from app.service.AccountService.AccountUpdateService import UpdateAccountInformationService 
 from app.service.AccountService.ChangePasswordService import ChangePasswordService
+from app.service.CloudinaryService.CloudinaryService import update_user_avatar_service
 
 # Forgot password imports
 from app.schemas.ForgotPasswordSchema.ForgotPasswordSchema import (
@@ -98,3 +100,15 @@ async def reset_password(body: ResetPasswordBody, db: AsyncSession = Depends(get
     if hasattr(res, "dict"):
         return res
     return ResetPasswordResponse(**res)
+@router.post("/avatar", response_model=MessageSchema)
+async def update_avatar(
+    file: UploadFile = File(...),
+    db: AsyncSession = Depends(get_async_session),
+    user: User = Depends(get_current_user),
+):
+    """
+    Upload avatar image to Cloudinary, update user record and return message.
+    Service handles validation, upload and error handling (raises HTTPException on error).
+    """
+    new_url = await update_user_avatar_service(db, user.id, file)
+    return MessageSchema(status="success", message="Ảnh đại diện đã được cập nhật.")
