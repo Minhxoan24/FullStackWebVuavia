@@ -2,6 +2,7 @@ import React, { createContext, useEffect, useState } from "react";
 import AuthService from "../Services/AuthService";
 import apiClient from "../Services/ApiService";
 import { getProfile } from "../Services/ApiUserService";
+import axios from "axios";
 
 export const AuthContext = createContext(null);
 
@@ -72,8 +73,32 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const refreshToken = async () => {
+    try {
+      const refresh = localStorage.getItem('refresh_token') || sessionStorage.getItem('refresh_token');
+      if (!refresh) throw new Error('No refresh token');
+      
+      const response = await axios.post(`${process.env.REACT_APP_API_URL || 'http://localhost:8000'}/Account/refresh`, {
+        refresh_token: refresh
+      });
+      
+      const { access_token, refresh_token: new_refresh } = response.data;
+      localStorage.setItem('access_token', access_token);
+      localStorage.setItem('refresh_token', new_refresh);
+      sessionStorage.setItem('access_token', access_token);
+      sessionStorage.setItem('refresh_token', new_refresh);
+      apiClient.defaults.headers.common.Authorization = `Bearer ${access_token}`;
+      setToken(access_token);
+      return access_token;
+    } catch (error) {
+      console.error('Refresh token failed:', error);
+      logout();
+      throw error;
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, token, loading, login, register, logout, refreshUser }}>
+    <AuthContext.Provider value={{ user, token, loading, login, register, logout, refreshUser, refreshToken }}>
       {children}
     </AuthContext.Provider>
   );

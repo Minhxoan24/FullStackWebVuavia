@@ -6,7 +6,7 @@ import ApiDeposit from '../../Services/ApiDeposit'; // Thêm checkDepositStatus
 
 const DepositPage = () => {
     const navigate = useNavigate();
-    const { user } = useContext(AuthContext);
+    const { user, refreshUser } = useContext(AuthContext);
 
     // Danh sách mệnh giá (có thể fetch từ API nếu cần)
     const [options] = useState([
@@ -182,6 +182,8 @@ const DepositPage = () => {
                                             try {
                                                 const statusData = await ApiDeposit.checkDepositStatus(depositInfo.transaction_code);
                                                 if (statusData.status === 'COMPLETED') {
+                                                    // Refresh user data để cập nhật số dư
+                                                    await refreshUser();
                                                     alert('Thanh toán thành công!');
                                                     navigate('/'); // Hoặc '/deposit/success'
                                                 } else {

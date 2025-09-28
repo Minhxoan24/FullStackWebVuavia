@@ -1,15 +1,19 @@
 import React, { useState, useContext } from "react";
+import { Link } from "react-router-dom";
 import "./MyAccount.css";
 import { AuthContext } from "../../Context/AuthContext";
 import { updateProfile, changePassword } from "../../Services/ApiUserService";
-import { Form, Button, Row, Col, Alert, Spinner, InputGroup } from "react-bootstrap";
-import { FaUser, FaEnvelope, FaPhone, FaLock, FaCheckCircle, FaEye, FaEyeSlash } from "react-icons/fa";
+import { Form, Button, Row, Col, Spinner } from "react-bootstrap";
+import { FaUser, FaEnvelope, FaPhone, FaLock, FaKey, FaCheckCircle } from "react-icons/fa";
+import Notification from "../../Components/Notification/Notification";
+import ChangePasswordModal from "../../Components/ChangePasswordModal/ChangePasswordModal";
+import AvatarDisplay from "../../Components/AvtDisplay/AvtDisplay";  // Thêm import
 
 const EMAIL_RGX = /^\S+@\S+\.\S+$/;
 const PHONE_RGX = /^[0-9()+\-.\s]{9,20}$/;
 
 const MyAccount = () => {
-    const { user } = useContext(AuthContext);
+    const { user, refreshUser } = useContext(AuthContext);
 
     const [form, setForm] = useState({
         firstName: user?.name || "",
@@ -17,22 +21,17 @@ const MyAccount = () => {
         accountName: user?.accountname || "",
         email: user?.email || "",
         phone: user?.phone || "",
-        currentPassword: "",
-        newPassword: "",
-        confirmPassword: "",
     });
 
     const [errors, setErrors] = useState({});
     const [saving, setSaving] = useState(false);
     const [alert, setAlert] = useState({ type: "", msg: "" }); // 'success' | 'danger' | ''
-    const [showPasswords, setShowPasswords] = useState({
-        current: false,
-        new: false,
-        confirm: false,
-    });
+    const [showPasswordModal, setShowPasswordModal] = useState(false);
 
     const onChange = (e) =>
         setForm((s) => ({ ...s, [e.target.name]: e.target.value }));
+
+    const clearAlert = () => setAlert({ type: "", msg: "" });
 
     const validate = () => {
         const err = {};
@@ -42,52 +41,46 @@ const MyAccount = () => {
         if (!EMAIL_RGX.test(form.email.trim())) err.email = "Email không hợp lệ.";
         if (!PHONE_RGX.test(form.phone.trim())) err.phone = "Số điện thoại không hợp lệ.";
 
-        // Nếu bất kỳ ô mật khẩu nào được nhập → kiểm tra đủ bộ và khớp
-        const anyPw = form.currentPassword || form.newPassword || form.confirmPassword;
-        if (anyPw) {
-            if (!form.currentPassword) err.currentPassword = "Nhập mật khẩu hiện tại.";
-            if (!form.newPassword) err.newPassword = "Nhập mật khẩu mới.";
-            if (!form.confirmPassword) err.confirmPassword = "Xác nhận mật khẩu mới.";
-            if (form.newPassword && form.newPassword.length < 6)
-                err.newPassword = "Mật khẩu mới tối thiểu 6 ký tự.";
-            if (form.newPassword && form.confirmPassword && form.newPassword !== form.confirmPassword)
-                err.confirmPassword = "Xác nhận mật khẩu mới không khớp.";
-        }
-
         setErrors(err);
         return Object.keys(err).length === 0;
     };
 
+    const validatePassword = (passwordData) => {
+        const err = {};
+        if (!passwordData.currentPassword) err.currentPassword = "Nhập mật khẩu hiện tại.";
+        if (!passwordData.newPassword) err.newPassword = "Nhập mật khẩu mới.";
+        if (!passwordData.confirmPassword) err.confirmPassword = "Xác nhận mật khẩu mới.";
+        if (passwordData.newPassword && passwordData.newPassword.length < 8)
+            err.newPassword = "Mật khẩu mới tối thiểu 8 ký tự.";
+        if (
+            passwordData.currentPassword &&
+            passwordData.newPassword &&
+            passwordData.currentPassword === passwordData.newPassword
+        )
+            err.newPassword = "Mật khẩu mới phải khác mật khẩu hiện tại.";
+        if (
+            passwordData.newPassword &&
+            passwordData.confirmPassword &&
+            passwordData.newPassword !== passwordData.confirmPassword
+        )
+            err.confirmPassword = "Xác nhận mật khẩu phải giống mật khẩu mới.";
+        return err;
+    };
+
     const onSubmit = async (e) => {
         e.preventDefault();
-        setAlert({ type: "", msg: "" });
-
+        clearAlert();
         if (!validate()) return;
 
         setSaving(true);
         try {
-            // 1) Cập nhật hồ sơ cơ bản (đúng theo payload bạn đang dùng)
             await updateProfile({
                 name: form.firstName.trim(),
                 surname: form.lastName.trim(),
                 phone: form.phone.trim(),
             });
 
-            // 2) Nếu nhập mật khẩu → gọi đổi mật khẩu
-            if (form.currentPassword && form.newPassword && form.confirmPassword) {
-                await changePassword({
-                    currentPassword: form.currentPassword,
-                    newPassword: form.newPassword,
-                    confirmPassword: form.confirmPassword, // giữ theo API bạn đang gọi
-                });
-                // dọn trường mật khẩu sau khi đổi
-                setForm((s) => ({
-                    ...s,
-                    currentPassword: "",
-                    newPassword: "",
-                    confirmPassword: "",
-                }));
-            }
+            await refreshUser?.();
 
             setAlert({ type: "success", msg: "Cập nhật thành công!" });
         } catch (error) {
@@ -101,21 +94,60 @@ const MyAccount = () => {
         }
     };
 
-    const toggleShowPassword = (field) => {
-        setShowPasswords((prev) => ({ ...prev, [field]: !prev[field] }));
+    const onChangePassword = async (pwdForm) => {
+        const pwErr = validatePassword(pwdForm);
+        if (Object.keys(pwErr).length > 0) {
+            setErrors(pwErr);
+            return;
+        }
+        setSaving(true);
+        try {
+            await changePassword({
+                currentPassword: pwdForm.currentPassword,
+                newPassword: pwdForm.newPassword,
+                confirmPassword: pwdForm.confirmPassword,
+            });
+            setShowPasswordModal(false);
+            setTimeout(() => {
+                setAlert({ type: "success", msg: "Mật khẩu đã được thay đổi thành công!" });
+            }, 250);
+        } catch (error) {
+            console.error("Change password error:", error);
+            setAlert({
+                type: "danger",
+                msg: error?.message || "Có lỗi xảy ra khi đổi mật khẩu.",
+            });
+        } finally {
+            setSaving(false);
+        }
     };
 
     return (
         <div className="account-wrap py-4">
             <div className="container">
                 <div className="account-card p-4 p-md-5 mx-auto">
-                    {!!alert.type && (
-                        <Alert variant={alert.type} className="mb-4">
-                            {alert.type === "success" && <FaCheckCircle className="me-2" />}
+                    {/* Alerts */}
+                    {!!alert.type && alert.type === "success" && alert.msg.includes("mật khẩu") && (
+                        <Notification type="success" message={alert.msg} onClose={clearAlert} />
+                    )}
+                    {!!alert.type && alert.type === "success" && !alert.msg.includes("mật khẩu") && (
+                        <div className="alert alert-success d-flex align-items-center mb-4" role="alert">
+                            <FaCheckCircle className="me-2" />
                             {alert.msg}
-                        </Alert>
+                        </div>
+                    )}
+                    {!!alert.type && alert.type === "danger" && (
+                        <Notification type="danger" message={alert.msg} onClose={clearAlert} />
                     )}
 
+                    {/* Form */}
+                    {/* Thêm AvatarDisplay ở đầu form */}
+                    <div className="text-center mb-4">
+                        <AvatarDisplay
+                            avatarUrl={user?.avatar || "https://res.cloudinary.com/dkwvlimht/image/upload/v1758401193/bc439871417621836a0eeea768d60944_fvui3e.jpg"}
+                            onAvatarUpdated={refreshUser}  // Refresh user sau upload để cập nhật avatar
+                        />
+                    </div>
                     <Form onSubmit={onSubmit} noValidate>
                         <Row className="g-4">
                             <Col md={6}>
@@ -130,6 +162,7 @@ const MyAccount = () => {
                                         value={form.firstName}
                                         onChange={onChange}
                                         isInvalid={!!errors.firstName}
+                                        className="form-control-elevated"
                                         required
                                     />
                                     <Form.Control.Feedback type="invalid">
@@ -150,6 +183,7 @@ const MyAccount = () => {
                                         value={form.lastName}
                                         onChange={onChange}
                                         isInvalid={!!errors.lastName}
+                                        className="form-control-elevated"
                                         required
                                     />
                                     <Form.Control.Feedback type="invalid">
@@ -168,8 +202,9 @@ const MyAccount = () => {
                                         type="text"
                                         name="accountName"
                                         value={form.accountName}
-                                        onChange={onChange}
+
                                         isInvalid={!!errors.accountName}
+                                        className="form-control-elevated"
                                         required
                                     />
                                     <Form.Control.Feedback type="invalid">
@@ -187,18 +222,19 @@ const MyAccount = () => {
                                         <FaEnvelope className="me-2" />
                                         Địa chỉ email
                                     </Form.Label>
-                                    <Form.Control
-                                        type="email"
-                                        name="email"
-                                        value={form.email}
-                                        onChange={onChange}
-                                        isInvalid={!!errors.email}
-                                        required
-                                    />
-                                    <Form.Control.Feedback type="invalid">
-                                        {errors.email}
-                                    </Form.Control.Feedback>
                                 </Form.Group>
+                                <Form.Control
+                                    type="email"
+                                    name="email"
+                                    value={form.email}
+
+                                    isInvalid={!!errors.email}
+                                    className="form-control-elevated"
+                                    required
+                                />
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.email}
+                                </Form.Control.Feedback>
                             </Col>
 
                             <Col xs={12}>
@@ -213,6 +249,7 @@ const MyAccount = () => {
                                         value={form.phone}
                                         onChange={onChange}
                                         isInvalid={!!errors.phone}
+                                        className="form-control-elevated"
                                         required
                                     />
                                     <Form.Control.Feedback type="invalid">
@@ -223,77 +260,23 @@ const MyAccount = () => {
 
                             <Col xs={12}>
                                 <hr className="my-4" />
-                                <div className="section-title text-uppercase fw-semibold text-muted">
-                                    <FaLock className="me-2" />
-                                    Thay đổi mật khẩu
+                                <div className="d-flex justify-content-between align-items-center password-section">
+                                    <div className="section-title text-uppercase fw-semibold">
+                                        <FaLock className="me-2" />
+                                        Thay đổi mật khẩu
+                                    </div>
+                                    <div className="d-flex gap-2">
+
+                                        <Button
+                                            variant="outline-primary"
+                                            onClick={() => setShowPasswordModal(true)}
+                                            className="btn-change-password"
+                                        >
+                                            <FaKey className="me-2" />
+                                            Đổi mật khẩu
+                                        </Button>
+                                    </div>
                                 </div>
-                            </Col>
-
-                            <Col xs={12}>
-                                <Form.Group>
-                                    <Form.Label>
-                                        Mật khẩu hiện tại <span className="text-muted">(bỏ trống nếu không đổi)</span>
-                                    </Form.Label>
-                                    <InputGroup>
-                                        <Form.Control
-                                            type={showPasswords.current ? "text" : "password"}
-                                            name="currentPassword"
-                                            value={form.currentPassword}
-                                            onChange={onChange}
-                                            isInvalid={!!errors.currentPassword}
-                                        />
-                                        <Button variant="outline-secondary" size="sm" onClick={() => toggleShowPassword('current')}>
-                                            {showPasswords.current ? <FaEyeSlash /> : <FaEye />}
-                                        </Button>
-                                    </InputGroup>
-                                    <Form.Control.Feedback type="invalid">
-                                        {errors.currentPassword}
-                                    </Form.Control.Feedback>
-                                </Form.Group>
-                            </Col>
-
-                            <Col xs={12}>
-                                <Form.Group>
-                                    <Form.Label>
-                                        Mật khẩu mới <span className="text-muted">(bỏ trống nếu không đổi)</span>
-                                    </Form.Label>
-                                    <InputGroup>
-                                        <Form.Control
-                                            type={showPasswords.new ? "text" : "password"}
-                                            name="newPassword"
-                                            value={form.newPassword}
-                                            onChange={onChange}
-                                            isInvalid={!!errors.newPassword}
-                                        />
-                                        <Button variant="outline-secondary" size="sm" onClick={() => toggleShowPassword('new')}>
-                                            {showPasswords.new ? <FaEyeSlash /> : <FaEye />}
-                                        </Button>
-                                    </InputGroup>
-                                    <Form.Control.Feedback type="invalid">
-                                        {errors.newPassword}
-                                    </Form.Control.Feedback>
-                                </Form.Group>
-                            </Col>
-
-                            <Col xs={12}>
-                                <Form.Group>
-                                    <Form.Label>Xác nhận mật khẩu mới</Form.Label>
-                                    <InputGroup>
-                                        <Form.Control
-                                            type={showPasswords.confirm ? "text" : "password"}
-                                            name="confirmPassword"
-                                            value={form.confirmPassword}
-                                            onChange={onChange}
-                                            isInvalid={!!errors.confirmPassword}
-                                        />
-                                        <Button variant="outline-secondary" size="sm" onClick={() => toggleShowPassword('confirm')}>
-                                            {showPasswords.confirm ? <FaEyeSlash /> : <FaEye />}
-                                        </Button>
-                                    </InputGroup>
-                                    <Form.Control.Feedback type="invalid">
-                                        {errors.confirmPassword}
-                                    </Form.Control.Feedback>
-                                </Form.Group>
                             </Col>
 
                             <Col xs={12}>
@@ -310,6 +293,16 @@ const MyAccount = () => {
                             </Col>
                         </Row>
                     </Form>
+
+                    {/* Modal đổi mật khẩu */}
+                    <ChangePasswordModal
+                        show={showPasswordModal}
+                        onHide={() => setShowPasswordModal(false)}
+                        onSubmit={onChangePassword}
+                        loading={saving}
+                        errors={errors}
+                        onErrorsChange={setErrors}
+                    />
                 </div>
             </div>
         </div>

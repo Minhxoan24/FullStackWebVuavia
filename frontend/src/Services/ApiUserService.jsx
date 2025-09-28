@@ -105,10 +105,8 @@ const resetPasswordWithOTP = async (email, otp, new_password) => {
     }
 };
 
-const uploadAvatar = async (file) => {
+const uploadAvatar = async (formData) => {  // Sửa tham số từ file thành formData
     try {
-        const formData = new FormData();
-        formData.append('file', file);
         const res = await apiClient.post("/Account/avatar", formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',

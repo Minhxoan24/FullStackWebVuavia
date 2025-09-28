@@ -1,5 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
+from sqlalchemy.sql import select
+
 from app.db.DataBase import get_async_session
 from app.core.auth import get_current_user
 from app.models.Users import User
@@ -28,6 +31,8 @@ from app.service.ForgotPasswordService.ForgotPasswordService import (
     verify_password_reset_otp,
     reset_password_with_otp
 )
+from app.schemas.AccountSchema.RefreshSchema import RefreshTokenRequest, RefreshTokenResponse
+from app.core.JWT import verify_refresh_token, create_full_token
 
 router = APIRouter(tags=["Account"] , prefix="/Account")
 
@@ -64,19 +69,41 @@ async def change_password(
     return await ChangePasswordService(data, user, db)
 @router.post("/refresh", response_model=LoginReponseSchema)
 async def refresh_access_token(
-    user: User = Depends(get_current_user), 
+    refresh_request: RefreshTokenRequest,
     db: AsyncSession = Depends(get_async_session)
 ):
     """Endpoint làm mới access token"""
-    if not user:
-        raise HTTPException(status_code=401, detail="Unauthorized")
-    
-    # Sửa: dùng accountname thay vì username
-    login_data = LoginUserSchema(
-        accountname=user.accountname, 
-        password=""  # Không cần password khi refresh
-    )
-    return await LoginAccountService(login_data, db)
+    try:
+        payload = verify_refresh_token(refresh_request.refresh_token)
+        user_id = payload.get("id")
+        if not user_id:
+            raise HTTPException(status_code=401, detail="Invalid refresh token")
+        
+        # Query user
+        query = select(User).options(selectinload(User.roles)).where(User.id == user_id)
+        result = await db.execute(query)
+        user = result.scalar_one_or_none()
+        
+        if not user:
+            raise HTTPException(status_code=401, detail="User not found")
+        
+        # Get roles
+        roles = [role.name.value for role in user.roles] if user.roles else ["USER"]
+        
+        # Create new tokens
+        token = create_full_token({
+            "id": user.id,
+            "roles": roles,
+            "accountname": user.accountname
+        })
+        
+        return LoginReponseSchema(
+            access_token=token["access_token"],
+            refresh_token=token["refresh_token"],
+            token_type="bearer"
+        )
+    except Exception as e:
+        raise HTTPException(status_code=401, detail="Invalid or expired refresh token")
 
 # ===== Forgot Password endpoints (moved under Account) =====
 @router.post("/forgot-password/request-otp", response_model=OTPStatusResponse)

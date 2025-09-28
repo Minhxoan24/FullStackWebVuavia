@@ -33,7 +33,7 @@ async def ChangePasswordService(
         
         return ChangePasswordResponse(
             message="Mật khẩu đã được thay đổi thành công",
-            status ="success"
+            success=True
         )
         
     except HTTPException:

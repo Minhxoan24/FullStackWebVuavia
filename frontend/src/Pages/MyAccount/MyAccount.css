@@ -1,58 +1,152 @@
-:root {
-    --brand-orange: #ff6f3d;
-    /* tông cam như ảnh */
-    --card-radius: 12px;
+/* Nền tổng & card */
+.account-wrap {
+    background: var(--brand-bg) !important;
+    min-height: 100vh !important;
 }
 
-/* khung trắng, bo góc, đổ bóng nhẹ */
 .account-card {
-    max-width: 760px;
-    background-color: #ffffff;
-    border-radius: var(--card-radius);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+    max-width: 760px !important;
+    background: var(--brand-card) !important;
+    border-radius: 12px !important;
+    box-shadow: var(--shadow-soft) !important;
 }
 
-/* label có dấu * */
+/* Label required */
 .form-label.required::after {
-    content: " *";
-    color: #dc3545;
-    font-weight: 600;
+    content: " *" !important;
+    color: #dc3545 !important;
+    font-weight: 600 !important;
 }
 
-/* input bo tròn + shadow nhẹ như ảnh */
+/* Inputs */
 .form-control-elevated {
-    border-radius: 10px;
-    border-color: #e9ecef;
-    box-shadow: 0 2px 8px rgba(33, 37, 41, 0.08);
+    border-radius: 10px !important;
+    border-color: var(--brand-border) !important;
+    box-shadow: 0 2px 8px rgba(33, 37, 41, 0.06) !important;
 }
 
 .form-control-elevated:focus {
-    border-color: #ced4da;
-    box-shadow: 0 0 0 .2rem rgba(13, 110, 253, .1), 0 4px 12px rgba(33, 37, 41, .12);
+    border-color: var(--brand-primary-500) !important;
+    box-shadow: var(--shadow-focus) !important;
 }
 
-/* tiêu đề section "Thay đổi mật khẩu" */
+/* Khối đổi mật khẩu */
+.password-section {
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%) !important;
+    border: 1px solid var(--brand-border) !important;
+    border-radius: 10px !important;
+    padding: 14px 16px !important;
+}
+
 .section-title {
-    letter-spacing: .02em;
+    letter-spacing: 0.02em !important;
+    color: var(--brand-muted) !important;
 }
 
-/* nút cam viền như ảnh */
+/* Buttons đẹp hơn */
 .btn-save {
-    background: #fff;
-    color: var(--brand-orange);
-    border: 2px solid var(--brand-orange);
-    border-radius: 10px;
-    transition: all .15s ease-in-out;
+    background: #fff !important;
+    color: var(--brand-primary) !important;
+    border: 2px solid var(--brand-primary) !important;
+    border-radius: 10px !important;
+    transition: all 0.15s ease-in-out !important;
 }
 
 .btn-save:hover {
-    background: var(--brand-orange);
-    color: #fff;
-    border-color: var(--brand-orange);
+    background: var(--brand-primary) !important;
+    color: #fff !important;
 }
 
-/* khoảng cách khung ngoài */
-.account-wrap {
-    background: #f8fafc;
-    min-height: 100vh;
+.btn-change-password {
+    border-radius: 10px !important;
+    font-weight: 500 !important;
+    border-color: var(--brand-primary) !important;
+    color: #dc3545 !important;
+    transition: all 0.15s ease-in-out !important;
+}
+
+.btn-change-password:hover {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(13, 130, 181, 0.25) !important;
+    background: rgba(19, 11, 167, 0.06) !important;
+    color: var(--brand-primary) !important;
+}
+
+.forgot-password-link {
+    font-size: 12px !important;
+    padding: 6px 10px !important;
+    text-decoration: none !important;
+    color: var(--brand-muted) !important;
+    border: 1px solid var(--brand-border) !important;
+    border-radius: 8px !important;
+    transition: all 0.15s ease-in-out !important;
+}
+
+.forgot-password-link:hover {
+    color: var(--brand-primary) !important;
+    border-color: var(--brand-primary) !important;
+}
+
+/* Modal (nếu dùng react-bootstrap) */
+.modal-content {
+    border: none !important;
+    border-radius: 12px !important;
+    box-shadow: 0 10px 40px rgba(79, 70, 229, 0.22) !important;
+}
+
+.modal-header {
+    border-bottom: 1px solid var(--brand-border) !important;
+    border-radius: 12px 12px 0 0 !important;
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%) !important;
+    padding: 20px 24px !important;
+}
+
+.modal-title {
+    font-weight: 600 !important;
+    color: var(--brand-text) !important;
+}
+
+.modal-body {
+    padding: 24px !important;
+    background: #fff !important;
+}
+
+.modal-footer {
+    border-top: 1px solid var(--brand-border) !important;
+    border-radius: 0 0 12px 12px !important;
+    background: #f8f9fa !important;
+    padding: 16px 24px !important;
+}
+
+.modal .form-control {
+    border-radius: 8px !important;
+    border: 1px solid var(--brand-border) !important;
+}
+
+.modal .form-control:focus {
+    border-color: var(--brand-primary-500) !important;
+    box-shadow: 0 0 0 0.2rem rgba(99, 102, 241, 0.12) !important;
+}
+
+/* Alert success mượt */
+.alert-success {
+    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%) !important;
+    border: 1px solid #c3e6cb !important;
+    border-radius: 8px !important;
+    color: #155724 !important;
+    padding: 12px 16px !important;
+    margin-bottom: 20px !important;
+    animation: slideDown 0.3s ease-out !important;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-12px) !important;
+        opacity: 0 !important;
+    }
+
+    to {
+        transform: translateY(0) !important;
+        opacity: 1 !important;
+    }
 }

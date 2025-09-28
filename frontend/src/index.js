@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 import AuthProvider from "./Context/AuthContext";
 import "./index.css";
+import "@fortawesome/fontawesome-free/css/all.min.css";
 
 // import { BrowserRouter } from 'react-router-dom';
 

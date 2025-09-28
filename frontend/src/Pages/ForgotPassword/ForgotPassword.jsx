@@ -401,7 +401,7 @@ const ForgotPassword = () => {
                                             Địa chỉ Email
                                         </label>
                                         <div className="input-with-icon">
-                                            <i className="fas fa-at" />
+                                            {/* <i className="fas fa-at" /> */}
                                             <input
                                                 type="email"
                                                 className="form-control form-control-lg"
